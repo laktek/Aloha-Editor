@@ -135,6 +135,7 @@ function(Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore, Engine) {
 				that.createUnorderedListButton.setPressed(false);
 				that.createOrderedListButton.setPressed(false);
 				
+        // TODO: Add command queryState
 				for ( i = 0; i < rangeObject.markupEffectiveAtStart.length; i++) {
 					effectiveMarkup = rangeObject.markupEffectiveAtStart[ i ];
 					if (Aloha.Selection.standardTagNameComparator(effectiveMarkup, jQuery('<ul></ul>'))) {
@@ -246,7 +247,22 @@ function(Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore, Engine) {
 		 * Transform the current selection to/from a list
 		 * @param ordered true when transforming to/from an ordered list, false for unordered lists
 		 */
-		transformList: function (ordered) {
+    transformList: function(ordered){
+      // visible is set to true, but the button is not visible
+			this.outdentListButton.show();
+			this.indentListButton.show();
+
+      if(ordered){
+        Aloha.execCommand("insertorderedlist", false);
+      }
+      else {
+        Aloha.execCommand("insertunorderedlist", false);
+      }
+           
+    },
+
+    /* NOTE: This method should be removed */
+		transformListOld: function (ordered) {
 			var domToTransform = this.getStartingDomObjectToTransform(),
 				lastLi, i, jqNewLi, jqList, selectedSiblings, jqParentList,
 				newPara, jqToTransform, nodeName;
@@ -462,6 +478,11 @@ function(Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore, Engine) {
 		 * Indent the selected list items by moving them into a new created, nested list
 		 */
 		indentList: function () {
+      Aloha.execCommand("indent", false)
+    },
+
+    /* NOTE: This method should be removed */
+		indentListOld: function () {
 			var listItem = this.getNearestSelectedListItem(),
 				i, jqNewList, selectedSiblings, jqOldList, jqItemBefore;
 
@@ -507,7 +528,12 @@ function(Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore, Engine) {
 		/**
 		 * Outdent nested list items by moving them into the outer list
 		 */
-		outdentList: function () {
+    outdentList: function(){
+     Aloha.execCommand("outdent", false)                
+    },
+
+    /* NOTE: This method should be removed */
+		outdentListOld: function () {
 			var
 				listItem = this.getNearestSelectedListItem(),
 				i, jqNewPostList,
@@ -643,103 +669,6 @@ function(Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore, Engine) {
 			}
 		}
 	});
-
-	/**
-	 * 
-	 */
-	Engine.commands['insertorderedlist'] = {
-		action: function(value, range) {
-			ListPlugin.transformList(true);
-			if (range && Aloha.Selection.rangeObject) {
-				range.startContainer = Aloha.Selection.rangeObject.startContainer;
-				range.startOffset = Aloha.Selection.rangeObject.startOffset;
-				range.endContainer = Aloha.Selection.rangeObject.endContainer;
-				range.endOffset = Aloha.Selection.rangeObject.endOffset;
-			}
-		},
-		indeterm: function() {
-			// TODO
-		},
-		state: function() {
-			for ( i = 0; i < rangeObject.markupEffectiveAtStart.length; i++) {
-				effectiveMarkup = rangeObject.markupEffectiveAtStart[ i ];
-				if (Aloha.Selection.standardTagNameComparator(effectiveMarkup, jQuery('<ul></ul>'))) {
-					return false;
-				}
-				if (Aloha.Selection.standardTagNameComparator(effectiveMarkup, jQuery('<ol></ol>'))) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-	};
-
-	Engine.commands['insertunorderedlist'] = {
-		action: function(value, range) {
-			ListPlugin.transformList(false);
-			if (range && Aloha.Selection.rangeObject) {
-				range.startContainer = Aloha.Selection.rangeObject.startContainer;
-				range.startOffset = Aloha.Selection.rangeObject.startOffset;
-				range.endContainer = Aloha.Selection.rangeObject.endContainer;
-				range.endOffset = Aloha.Selection.rangeObject.endOffset;
-			}
-		},
-		indeterm: function() {
-			// TODO
-		},
-		state: function() {
-			for ( i = 0; i < rangeObject.markupEffectiveAtStart.length; i++) {
-				effectiveMarkup = rangeObject.markupEffectiveAtStart[ i ];
-				if (Aloha.Selection.standardTagNameComparator(effectiveMarkup, jQuery('<ul></ul>'))) {
-					return true;
-				}
-				if (Aloha.Selection.standardTagNameComparator(effectiveMarkup, jQuery('<ol></ol>'))) {
-					return false;
-				}
-			}
-
-			return false;
-		}
-	};
-
-	Engine.commands['indent'] = {
-		action: function(value, range) {
-			ListPlugin.indentList();
-			if (range && Aloha.Selection.rangeObject) {
-				range.startContainer = Aloha.Selection.rangeObject.startContainer;
-				range.startOffset = Aloha.Selection.rangeObject.startOffset;
-				range.endContainer = Aloha.Selection.rangeObject.endContainer;
-				range.endOffset = Aloha.Selection.rangeObject.endOffset;
-			}
-		},
-		indeterm: function() {
-			// TODO
-		},
-		state: function() {
-			// TODO
-			return false;
-		}
-	};
-
-	Engine.commands['outdent'] = {
-		action: function(value, range) {
-			ListPlugin.outdentList();
-			if (range && Aloha.Selection.rangeObject) {
-				range.startContainer = Aloha.Selection.rangeObject.startContainer;
-				range.startOffset = Aloha.Selection.rangeObject.startOffset;
-				range.endContainer = Aloha.Selection.rangeObject.endContainer;
-				range.endOffset = Aloha.Selection.rangeObject.endOffset;
-			}
-		},
-		indeterm: function() {
-			// TODO
-		},
-		state: function() {
-			// TODO
-			return false;
-		}
-	};
 
 	/**
 	 * A key handler that should be run as a keyup handler for the
