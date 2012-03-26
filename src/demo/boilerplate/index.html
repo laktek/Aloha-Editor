@@ -16,10 +16,58 @@
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="../../css/aloha.css" id="aloha-style-include" type="text/css">
+
+	<style>
+		/* Place the new UI toolbar somewhere where we can see it */
+		.aloha-toolbar {
+			position: fixed;
+			top: 5px;
+			left: 5px;
+			width: 700px !important;
+			z-index: 99999;
+		}
+	</style>
 	
-	<script src="js/aloha-config.js"></script>
-	<!--  extra/attributes,extra/googletranslate,extra/metaview,extra/wai-lang,extra/headerids,extra/cite  -->
+	<script>
+		var Aloha = {
+			settings: {
+				toolbar: [
+					{
+						label: "Tab <i>on italic</i>",
+						showOn: "i",
+						components: [
+							[ "bold" ],
+							[ "italic", "italic" ]
+						]
+					},
+					{
+						label: "Tab <b>on bold</b>",
+						showOn: "b",
+						components: [
+							[ "italic" ],
+							[ "bold", "bold" ]
+						]
+					},
+					{
+						label: "Another Tab",
+						showOn: true,
+						components: [ [ "bold", "italic" ], [ "formatBlock" ] ]
+					}
+				],
+				// nativeCommands : true,
+				locale: "en"
+			}
+		};
+	</script>
+
 	<script src="../../lib/aloha.js"
+		data-aloha-plugins="common/ui,
+		                    extra/browser,
+							extra/wai-lang,
+							extra/flag-icons"></script>
+
+	<!-- script src="js/aloha-config.js"></script -->
+	<!-- script src="../../lib/aloha.js"
 	        data-aloha-plugins="common/format,
 	                            common/table,
 	                            common/list,
@@ -38,7 +86,8 @@
 	                            extra/numerated-headers,
 	                            extra/formatlesspaste,
 	                            extra/browser,
-	                            extra/linkbrowser"></script>
+	                            extra/linkbrowser"></script -->
+
 	<script src="js/aloha-boilerplate.js"></script>
 </head>
 <body>
