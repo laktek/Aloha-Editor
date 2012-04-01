@@ -32,28 +32,48 @@
 		var Aloha = {
 			settings: {
 				toolbar: [
+          // Format Toolbar
 					{
-						label: "Tab <i>on italic</i>",
-						showOn: "i",
-						components: [
-							[ "bold" ],
-							[ "italic", "italic" ]
-						]
-					},
-					{
-						label: "Tab <b>on bold</b>",
-						showOn: "b",
-						components: [
-							[ "italic" ],
-							[ "bold", "bold" ]
-						]
-					},
-					{
-						label: "Another Tab",
+						label: "Format",
 						showOn: true,
-						components: [ [ "bold", "italic" ], [ "formatBlock" ] ]
-					}
+						components: [
+							  [ "bold", "italic", "underline", "strikethrough", "subscript", "superscript", "unorderedList", "orderedList", "link" ] 
+              , [ "justifyLeft", "justifyRight", "justifyCenter", "justifyFull", "abbr", "languageAnnotation"]
+              , [ "formatBlock" ]
+						]
+					},
+          // Insert Toolbar
+					{
+						label: "Insert",
+						showOn: true,
+						components: [
+							  [ "link" ]
+							, [ "abbr" ]
+						]
+          },
+
+          // Language Annotations Toolbar
+          {
+            label: "Language annotation", 
+            showOn: "*[lang]",
+            components: [ ["editLanguageAnnotation"] ]
+          },
+
+          // Abbreviation Toolbar
+          {
+            label: "Abbreviation", 
+            showOn: "abbr",
+            components: [ ["editAbbr"] ]
+          },
+
+          // Link Toolbar
+          {
+            label: "Link", 
+            showOn: "a",
+            components: [ ["editLink", "linkBrowser", "removeLink"] ]
+          },
 				],
+
 				// nativeCommands : true,
 				locale: "en"
 			}
@@ -63,8 +83,8 @@
 	<script src="../../lib/aloha.js"
 		data-aloha-plugins="common/ui,
 		                    extra/browser,
-							extra/wai-lang,
-							extra/flag-icons"></script>
+                        extra/wai-lang,
+                        extra/flag-icons"></script>
 
 	<!-- script src="js/aloha-config.js"></script -->
 	<!-- script src="../../lib/aloha.js"
