@@ -140,7 +140,9 @@ define([
 		 */
 		trackRange: function( element ) {
 			element
-				.bind( "mousedown", function() {
+				.bind( "mousedown", function(e) {
+          e.originalEvent.stopSelectionUpdate = true;
+          Aloha.eventHandled = true;
 					Surface.suppressHide = true;
 
 					if ( Aloha.activeEditable ) {
@@ -149,7 +151,9 @@ define([
 						Surface.editable = Aloha.activeEditable;
 					}
 				})
-				.bind( "mouseup", function() {
+				.bind( "mouseup", function(e) {
+          e.originalEvent.stopSelectionUpdate = true;
+          Aloha.eventHandled = false;
 					Surface.suppressHide = false;
 				});
 		}
