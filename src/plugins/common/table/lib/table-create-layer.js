@@ -112,9 +112,7 @@ function (jQuery) {
 		// append layer to body and
 		// hide the create layer if user clicks anywhere in the body
 		jQuery('body').append(layer).bind('click', function(e) {
-      console.log((e.target != that.get('target') || $.contains(that.get('target'), e.target)));
-
-			if (!(e.target == that.get('target') || jQuery.contains(that.get('target'), e.target)) && that.visible) {
+			if (!(e.target == that.get('target') || jQuery.contains(that.get('target')[0], e.target)) && that.visible) {
 				that.hide();
 			}
 		});
