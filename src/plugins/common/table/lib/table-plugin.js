@@ -102,9 +102,12 @@ define( [
 	 */
 	TablePlugin.init = function() {
 
-    this.tableFormats = Aloha.settings.table.formats.table || [];
-    this.rowFormats = Aloha.settings.table.formats.row || [];
-    this.columnFormats = Aloha.settings.table.formats.column || [];
+    var tableSettings = Aloha.settings.table; //this.settings
+
+    this.tableFormats = tableSettings.formats.table || [];
+    this.rowFormats = tableSettings.formats.row || [];
+    this.columnFormats = tableSettings.formats.column || [];
+    this.summaryinsidebar = tableSettings.summaryinsidebar;
 		
 		// add reference to the create layer object
 		this.createLayer = new CreateLayer( this );
@@ -136,6 +139,9 @@ define( [
 		// initialize the table buttons
 		this.initTableButtons();
 
+		// initialize the summary for table 
+    this.initTableSummary();
+
 		Aloha.bind( 'aloha-table-selection-changed', function () {
 			if ( null != TablePlugin.activeTable &&
 					0 !== TablePlugin.activeTable.selection.selectedCells.length ) {
@@ -166,7 +172,7 @@ define( [
 				}, Aloha.activeEditable.obj);
 
 				if ( that.activeTable ) {
-					// check wheater we are inside a table
+					// check whether we are inside a table
 					if ( table ) {
 						TablePlugin.updateFloatingMenuScope();
 					} else {
@@ -179,9 +185,6 @@ define( [
 					}
 				}
 
-				// TODO this should not be necessary here!
-        // Note: To be removed
-				//FloatingMenu.doLayout();
 			}
 		});
 
@@ -246,75 +249,60 @@ define( [
 			}
 		} );
 		
-		if ( this.settings.summaryinsidebar ) {
-			Aloha.ready( function () { 
-				that.initSidebar( Aloha.Sidebar.right.show() );  
-			} );
-		}
+		
 	};
 
-	//namespace prefix for this plugin
-	var tableNamespace = 'aloha-table';
+  /**
+	 * initializes the table summary component 
+	 */
+  TablePlugin.initTableSummary = function(){
+    var that = this;
+    /**
+     * Table summary component
+     * @class
+     * @extends {Component}
+     */
+     Component.define( "tableSummary", Component, {
+       /**
+        * Initializes the table summary panel
+        * @override
+        */
+        init: function() {
+          this.element = jQuery( "<div>" );
 
-	function nsSel () {
-		var stringBuilder = [], prefix = tableNamespace;
-		jQuery.each(arguments, function () { stringBuilder.push('.' + (this == '' ? prefix : prefix + '-' + this)); });
-		return stringBuilder.join(' ').trim();
-	};
+          this.summaryLabel = jQuery( "<label>" +  i18n.t('table.label.target') + "</label>" )
+              .appendTo( this.element );
 
-	//Creates string with this component's namepsace prefixed the each classname
-	function nsClass () {
-		var stringBuilder = [], prefix = tableNamespace;
-		jQuery.each(arguments, function () { stringBuilder.push(this == '' ? prefix : prefix + '-' + this); });
-		return stringBuilder.join(' ').trim();
-	};
+          this.summaryField = jQuery( "<textarea></textarea>")
+              .bind( "keyup", function() {
+                if (that.activeTable) {
+                  that.activeTable.obj.attr('summary', jQuery(this).val());
+                  var waiDiv = jQuery('div[class*="wai"]', 'table#' + that.activeTable.obj.attr('id'));
+                  waiDiv.removeClass("aloha-wai-green");
+                  waiDiv.removeClass("aloha-wai-red");
+                    
+                  if (jQuery(this).val().trim() != '') {
+                    waiDiv.addClass("aloha-wai-green");
+                  } else {
+                    waiDiv.addClass("aloha-wai-red");
+                  }
+                }
+              })
+              .appendTo( this.element )
 
-	TablePlugin.initSidebar = function(sidebar) {
-		var pl = this;
-		pl.sidebar = sidebar;
-		sidebar.addPanel({
-            
-            id       : nsClass('sidebar-panel'),
-            title    : i18n.t('table.sidebar.title'),
-            content  : '',
-            expanded : true,
-            activeOn : 'table',
-            
-            onInit   : function () {
-            	var that = this,
-	            content = this.setContent(
-	                '<label class="' + nsClass('label') + '" for="' + nsClass('textarea') + '" >' + i18n.t('table.label.target') + '</label>' +
-	                	'<textarea id="' + nsClass('textarea') + '" class="' + nsClass('textarea') + '" />').content;
-	            
-            	jQuery(nsSel('textarea')).live('keyup', function() { 
-					//The original developer thought that escaping the
-					//quote characters of the textarea value are
-					//necessary to work around a bug in IE. I could not
-					//reproduce the bug, so I commented the following
-					//out.
-					//.replace("\"", '&quot;').replace("'", "&#39;")
- 					jQuery(that.effective).attr('summary', jQuery(nsSel('textarea')).val());
- 					var waiDiv = jQuery('div[class*="wai"]', 'table#' + jQuery(that.effective).attr('id'));
- 					waiDiv.removeClass(pl.get('waiGreen'));
- 					waiDiv.removeClass(pl.get('waiRed'));
- 				    
- 					if (jQuery(nsSel('textarea')).val().trim() != '') {
- 						waiDiv.addClass(pl.get('waiGreen'));
-				    } else {
-				    	waiDiv.addClass(pl.get('waiRed'));
-				    }
- 				});
-            },
-            
-            onActivate: function (effective) {
-            	var that = this;
-				that.effective = effective;
-				jQuery(nsSel('textarea')).val(jQuery(that.effective).attr('summary'));
-            }
-            
-        });
-		sidebar.show();
-	};
+        },
+
+        /**
+         * Selection change callback
+         * @override
+         */
+        selectionChange: function(range) {
+          if(that.activeTable){
+            this.summaryField.val(that.activeTable.obj.attr('summary'));
+          } 
+        }
+     });
+  };
 
 	/**
 	 * test if the table is editable
@@ -1187,59 +1175,6 @@ define( [
       }
     });
 
-		// for cells
-		// add summary field
-		// this.summary = new Aloha.ui.AttributeField( {
-		// 	width : 275,
-		// 	name  : 'tableSummary'
-		// } );
-		// 
-		// this.summary.addListener( 'keyup', function( obj, event ) {
-		// 	that.activeTable.checkWai();
-		// } );
-		// 
-		// if(!this.settings.summaryinsidebar) {
-		// 	FloatingMenu.addButton(
-		// 		this.name + '.cell',
-		// 		this.summary,
-		// 		i18n.t('floatingmenu.tab.table'),
-		// 		1
-		// 	);
-		// }
-    //
-
-    /**
-     * Cite details component
-     * @class
-     * @extends {Component}
-     */
-    Component.define( "tableSummary", Component, {
-      /**
-       * Initializes the cite details panel
-       * @override
-       */
-      init: function() {
-        this.element = jQuery( "<div>" );
-
-        this.linkElem = jQuery( "<label>Summary: <input></label>" )
-          .appendTo( this.element )
-          .children( "input" )
-            .attr("width", "275")
-            .addClass( "aloha-ui-fill" )
-            .bind( "keyup", function() {
-              that.activeTable.checkWai();
-            });
-      },
-
-      /**
-       * Selection change callback
-       * @override
-       */
-      selectionChange: function() {
-      }
-    });
-
-
 	};
 
 	/**
@@ -1394,8 +1329,8 @@ define( [
 				// set caption button
         // Note: Commented till captions are fixed.
 				//that.captionButton.setPressed(true);
-				//var c = focusTable.obj.children("caption");
-				//that.makeCaptionEditable(c);
+				var c = focusTable.obj.children("caption");
+				that.makeCaptionEditable(c);
 			}
 			focusTable.hasFocus = true;
 		}
