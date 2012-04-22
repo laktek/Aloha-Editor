@@ -117,6 +117,25 @@
             components: [ ["editQuote"] ]
           },
 
+          {
+            label: "Table",
+            showOn: true, 
+            components: [ [ "mergecells", "splitcells" ] ]
+          },
+
+          {
+            label: "Column",
+            showOn: true, 
+            components: [ ["addcolumnleft", "addcolumnright", "deletecolumns", "columnheader", "mergecells", "splitcells", "formatColumn"] ]
+          },
+
+
+          {
+            label: "Row",
+            showOn: true, 
+            components: [ ["addrowbefore", "addrowafter", "deleterows", "rowheader", "mergecells", "splitcells", "formatRow"] ]
+          }
+
 				],
 
         sidebar: [
@@ -128,6 +147,16 @@
             ]
           }
         ],
+
+        // format column blocks
+        formatColumn: {
+          blocks: ['bigbold', 'redwhite'] 
+        },
+
+        // format row blocks
+        formatRow: {
+          blocks: ['bigbold', 'redwhite'] 
+        },
 
 				// nativeCommands : true,
 				locale: "en"
