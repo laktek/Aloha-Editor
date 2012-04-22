@@ -95,34 +95,6 @@ define( [
 		selectionArea        : 10                             // width/height of the selection rows (in pixel)
 	};
 
-  /**
-   * @hide
-   * {name:'green', text:'Green',tooltip:'Green',iconClass:'GENTICS_table GENTICS_button_green',cssClass:'green'}
-  */
-  TablePlugin.checkConfig = function (c){
-        
-    if (typeof c == 'object' && c.length) {
-      var newC = [];
-      
-      for (var i = 0; i < c.length; i++) {
-        if (c[i]) {
-          newC.push({
-            text	  : c[i].text	   ? c[i].text		: c[i].name,
-            tooltip	  : c[i].tooltip   ? c[i].tooltip	: c[i].text,
-            iconClass : c[i].iconClass ? c[i].iconClass	: 'aloha-button-' + c[i].name,
-            cssClass  : c[i].cssClass  ? c[i].cssClass	: c[i].name
-          });
-        }
-      }
-      
-      c = newC;
-    } else {
-      c = [];
-    }
-    
-    return c;
-  };
-  
 	/**
 	 * Init method of the Table-plugin transforms all tables in the document
 	 *
@@ -130,10 +102,9 @@ define( [
 	 */
 	TablePlugin.init = function() {
 
-		// apply settings
-		this.tableConfig = this.checkConfig(this.tableConfig||this.settings.tableConfig);
-		//this.columnConfig = this.checkConfig(this.columnConfig||this.settings.columnConfig);
-		this.rowConfig = this.checkConfig(this.rowConfig||this.settings.rowConfig);
+    this.tableFormats = Aloha.settings.table.formats.table || [];
+    this.rowFormats = Aloha.settings.table.formats.row || [];
+    this.columnFormats = Aloha.settings.table.formats.column || [];
 		
 		// add reference to the create layer object
 		this.createLayer = new CreateLayer( this );
@@ -639,7 +610,7 @@ define( [
        * @returns {Array.<Object>}
        */
       getButtons: function() {
-        return jQuery.map( this.editable.settings.formatRow.blocks, function( block ) {
+        return jQuery.map( that.rowFormats, function( block ) {
           return FormatRow._buttons[ block ];
         });
       },
@@ -671,12 +642,10 @@ define( [
       * @param {String} block 
       */
       transformRowFormatting: function(sc, block){
-        var rowBlocks = this.editable.settings.formatRow.blocks;
-
         for (var i = 0; i < sc.length; i++) {
           // remove all rowformattings
-          for (var f = 0; f < rowBlocks.length; f++) {
-            jQuery(sc[i]).removeClass("table-style-" + rowBlocks[f]);
+          for (var f = 0; f < that.rowFormats.length; f++) {
+            jQuery(sc[i]).removeClass("table-style-" + that.rowFormats[f]);
           }
 
           // set new block 
@@ -692,7 +661,7 @@ define( [
      * @type {Array.<Object>}
      */
     FormatRow._buttons = {};
-    jQuery.each( Aloha.settings.formatRow.blocks, function( i, block ) {
+    jQuery.each( that.rowFormats, function( i, block ) {
       FormatRow._buttons[ block ] = {
         label: i18n.t( "button." + block + ".label" ),
         icon: "aloha-large-icon-" + block,
@@ -896,7 +865,7 @@ define( [
        * @returns {Array.<Object>}
        */
       getButtons: function() {
-        return jQuery.map( this.editable.settings.formatColumn.blocks, function( block ) {
+        return jQuery.map( that.columnFormats, function( block ) {
           return FormatColumn._buttons[ block ];
         });
       },
@@ -928,12 +897,10 @@ define( [
       * @param {String} block 
       */
       transformColumnFormatting: function(sc, block){
-        var columnBlocks = this.editable.settings.formatColumn.blocks;
-
         for (var i = 0; i < sc.length; i++) {
           // remove all columnformattings
-          for (var f = 0; f < columnBlocks.length; f++) {
-            jQuery(sc[i]).removeClass("table-style-" + columnBlocks[f]);
+          for (var f = 0; f < that.columnFormats.length; f++) {
+            jQuery(sc[i]).removeClass("table-style-" + that.columnFormats[f]);
           }
 
           // set new block 
@@ -949,7 +916,7 @@ define( [
      * @type {Array.<Object>}
      */
     FormatColumn._buttons = {};
-    jQuery.each( Aloha.settings.formatColumn.blocks, function( i, block ) {
+    jQuery.each( that.columnFormats, function( i, block ) {
       FormatColumn._buttons[ block ] = {
         label: i18n.t( "button." + block + ".label" ),
         icon: "aloha-large-icon-" + block,
@@ -1102,7 +1069,7 @@ define( [
        * @returns {Array.<Object>}
        */
       getButtons: function() {
-        return jQuery.map( this.editable.settings.formatTable.blocks, function( block ) {
+        return jQuery.map( that.tableFormats, function( block ) {
           return FormatTable._buttons[ block ];
         });
       },
@@ -1115,12 +1082,10 @@ define( [
         return [{
           label: i18n.t( "button.removeFormatting.label" ),
           click: function() {
-            var tableBlocks = this.editable.settings.formatTable.blocks;
-
             // remove all table classes
             if (that.activeTable) {
-              for (var f = 0; f < tableBlocks.length; f++) {
-                that.activeTable.obj.removeClass(tableBlocks[f]);
+              for (var f = 0; f < that.tableFormats.length; f++) {
+                that.activeTable.obj.removeClass(that.tableFormats[f]);
               }
             }
           }
@@ -1133,17 +1098,15 @@ define( [
      * @type {Array.<Object>}
      */
     FormatTable._buttons = {};
-    jQuery.each( Aloha.settings.formatTable.blocks, function( i, block ) {
+    jQuery.each( that.tableFormats, function( i, block ) {
       FormatTable._buttons[ block ] = {
         label: i18n.t( "button." + block + ".label" ),
         icon: "aloha-large-icon-" + block,
         click: function() {
-          var tableBlocks = this.editable.settings.formatTable.blocks;
-
           // set table css class
           if (that.activeTable) {
-            for (var f = 0; f < tableBlocks.length; f++) {
-              that.activeTable.obj.removeClass(tableBlocks[f]);
+            for (var f = 0; f < that.tableFormats; f++) {
+              that.activeTable.obj.removeClass(that.tableFormats[f]);
             }
             that.activeTable.obj.addClass(block);
           }

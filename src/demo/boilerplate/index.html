@@ -156,27 +156,21 @@
           }
         ],
 
-       // format table blocks
-       formatTable: {
-         blocks: [
+       // table settings
+       table : {
+        formats: {
+          table : [
                    'hor-minimalist-a',
                    'box-table-a',
                    'hor-zebra'
-                  ]
+                   ],
+          column: ['bigbold', 'redwhite'],
+          row: ['bigbold', 'redwhite'],
+        } 
        },
-
-       // format column blocks
-       formatColumn: {
-         blocks: ['bigbold', 'redwhite'] 
-       },
-
-       // format row blocks
-       formatRow: {
-         blocks: ['bigbold', 'redwhite'] 
-       },
-
-				// nativeCommands : true,
-				locale: "en"
+       
+			// nativeCommands : true,
+			locale: "en"
 			}
 		};
 	</script>
