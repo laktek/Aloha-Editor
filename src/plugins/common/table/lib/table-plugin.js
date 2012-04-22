@@ -1093,60 +1093,69 @@ define( [
     // generate merge/split buttons 
     this.initMergeSplitButtons();
 
-    // generate formatting buttons for tables
-    // this.tableMSItems = [];
-    
-    // var tableConfig = this.tableConfig;
-    
-    // jQuery.each(tableConfig, function(j, itemConf){
-    //   that.tableMSItems.push({
-    //     name: itemConf.name,
-    //     text: i18n.t(itemConf.text),
-    //     tooltip: i18n.t(itemConf.tooltip),
-    //     iconClass: 'aloha-button aloha-table-layout ' + itemConf.iconClass,
-    //     click: function(){
-    //       // set table css class
-    //       if (that.activeTable) {
-    //         for (var f = 0; f < tableConfig.length; f++) {
-    //           that.activeTable.obj.removeClass(tableConfig[f].cssClass);
-    //         }
-    //         that.activeTable.obj.addClass(itemConf.cssClass);
-    //       }
-    //     }
-    //   });
-    // });
-    
-    // if(this.tableMSItems.length > 0) {
-    //   this.tableMSItems.push({
-    //     name: 'removeFormat',
-    //     text: i18n.t('button.removeFormat.text'),
-    //     tooltip: i18n.t('button.removeFormat.tooltip'),
-    //     iconClass: 'aloha-button aloha-button-removeFormat',
-    //     wide: true,
-    //     click: function () {
-    //       // remove all table classes
-    //       if (that.activeTable) {
-    //         for (var f = 0; f < tableConfig.length; f++) {
-    //           that.activeTable.obj.removeClass(that.tableConfig[f].cssClass);
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
-    
-    // this.tableMSButton = new Aloha.ui.MultiSplitButton({
-    //   items : this.tableMSItems,
-    //   name : 'tableActions'
-    // });
-    // 
-    // if(this.tableMSItems.length > 0) {
-    //   FloatingMenu.addButton(
-    //     this.name + '.cell',
-    //     this.tableMSButton,
-    //     i18n.t('floatingmenu.tab.tablelayout'),
-    //     3
-    //   );
-    // };
+    /**
+     * Table formatting component
+     * @class
+     * @extends {MultiSplit}
+     */
+    var FormatTable = Component.define( "formatTable", MultiSplit, {
+      /**
+       * Gets the buttons for the multi split menu
+       * @returns {Array.<Object>}
+       */
+      getButtons: function() {
+        return jQuery.map( this.editable.settings.formatTable.blocks, function( block ) {
+          return FormatTable._buttons[ block ];
+        });
+      },
+
+      /**
+       * Gets the items for bottom of the multi split menu
+       * @returns {Array.<Object>}
+       */
+      getItems: function() {
+        return [{
+          label: i18n.t( "button.removeFormatting.label" ),
+          click: function() {
+            var tableBlocks = this.editable.settings.formatTable.blocks;
+
+            // remove all table classes
+            if (that.activeTable) {
+              for (var f = 0; f < tableBlocks.length; f++) {
+                that.activeTable.obj.removeClass(tableBlocks[f]);
+              }
+            }
+          }
+        }];
+      },
+    });
+
+    /**
+     * Settings for all format table buttons
+     * @type {Array.<Object>}
+     */
+    FormatTable._buttons = {};
+    jQuery.each( Aloha.settings.formatTable.blocks, function( i, block ) {
+      FormatTable._buttons[ block ] = {
+        label: i18n.t( "button." + block + ".label" ),
+        icon: "aloha-large-icon-" + block,
+        click: function() {
+          var tableBlocks = this.editable.settings.formatTable.blocks;
+
+          // set table css class
+          if (that.activeTable) {
+            for (var f = 0; f < tableBlocks.length; f++) {
+              that.activeTable.obj.removeClass(tableBlocks[f]);
+            }
+            that.activeTable.obj.addClass(block);
+          }
+        },
+        isActive: function() {
+          // TODO: Figure out way to detect the active state
+        }
+      };
+    });
+
 
 	// Add caption button
     // this.captionButton = new Aloha.ui.Button({

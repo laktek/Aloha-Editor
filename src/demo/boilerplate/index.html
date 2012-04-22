@@ -120,7 +120,7 @@
           {
             label: "Table",
             showOn: true, 
-            components: [ [ "mergecells", "splitcells" ] ]
+            components: [ [ "mergecells", "splitcells", "formatTable"] ]
           },
 
           {
@@ -148,15 +148,24 @@
           }
         ],
 
-        // format column blocks
-        formatColumn: {
-          blocks: ['bigbold', 'redwhite'] 
-        },
+       // format table blocks
+       formatTable: {
+         blocks: [
+                   'hor-minimalist-a',
+                   'box-table-a',
+                   'hor-zebra'
+                  ]
+       },
 
-        // format row blocks
-        formatRow: {
-          blocks: ['bigbold', 'redwhite'] 
-        },
+       // format column blocks
+       formatColumn: {
+         blocks: ['bigbold', 'redwhite'] 
+       },
+
+       // format row blocks
+       formatRow: {
+         blocks: ['bigbold', 'redwhite'] 
+       },
 
 				// nativeCommands : true,
 				locale: "en"
