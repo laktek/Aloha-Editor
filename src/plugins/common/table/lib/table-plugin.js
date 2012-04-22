@@ -1082,8 +1082,6 @@ define( [
       }
     });
 
-    // now the specific table buttons
-
     // generate formatting buttons for columns
     this.initColumnBtns();
 
@@ -1156,53 +1154,75 @@ define( [
       };
     });
 
+    /**
+     * Table Caption component
+     * @class
+     * @override {ToggleButton}
+     */
+    Component.define( "tableCaption", ToggleButton, {
+      /**
+       * Localized label
+       * @type {string}
+       */
+      label: i18n.t( "button.tableCaption.label" ),
 
-	// Add caption button
-    // this.captionButton = new Aloha.ui.Button({
-    //   'name' : 'tablecaption',
-		// 	'iconClass' : 'aloha-button aloha-button-table-caption',
-		// 	'size' : 'small',
-		// 	'tooltip' : i18n.t('button.caption.tooltip'),
-		// 	'toggle' : true,
-		// 	'onclick' : function () {
-		// 		if (that.activeTable) {
-		// 			// look if table object has a child caption
-		// 			if ( that.activeTable.obj.children("caption").is('caption') ) {
-		// 				that.activeTable.obj.children("caption").remove();
-		// 				// select first cell of table
-		// 			} else {
-		// 				var captionText = i18n.t('empty.caption');
-		// 				var c = jQuery('<caption></caption>');
-		// 				that.activeTable.obj.append(c);
-		// 				that.makeCaptionEditable(c, captionText);
+      /**
+       * Whether or not to show only the icon
+       * @type {boolean}
+       */
+      iconOnly: true,
 
-		// 				// get the editable span within the caption and select it
-		// 				var cDiv = c.find('div').eq(0);
-		// 				var captionContent = cDiv.contents().eq(0);
-		// 				if (captionContent.length > 0) {
-		// 					var newRange = new GENTICS.Utils.RangeObject();
-		// 					newRange.startContainer = newRange.endContainer = captionContent.get(0);
-		// 					newRange.startOffset = 0;
-		// 					newRange.endOffset = captionContent.text().length;
+      /**
+       * Which icon to render
+       * @type {string}
+       */
+      icon: "aloha-icon aloha-icon-table-caption",
 
-		// 					// blur all editables within the table
-		// 					that.activeTable.obj.find('div.aloha-table-cell-editable').blur();
+      /**
+       * Click callback
+       * @override
+       */
+      click: function() {
+        if (that.activeTable) {
+					// look if table object has a child caption
+					if ( that.activeTable.obj.children("caption").is('caption') ) {
+						that.activeTable.obj.children("caption").remove();
+						// select first cell of table
+					} else {
+						var captionText = i18n.t('empty.caption');
+						var c = jQuery('<caption></caption>');
+						that.activeTable.obj.append(c);
+						that.makeCaptionEditable(c, captionText);
 
-		// 					cDiv.focus();
-		// 					newRange.select();
-		// 					Aloha.Selection.updateSelection();
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// });
+						// get the editable span within the caption and select it
+						var cDiv = c.find('div').eq(0);
+						var captionContent = cDiv.contents().eq(0);
+						if (captionContent.length > 0) {
+							var newRange = new GENTICS.Utils.RangeObject();
+							newRange.startContainer = newRange.endContainer = captionContent.get(0);
+							newRange.startOffset = 0;
+							newRange.endOffset = captionContent.text().length;
 
-		// FloatingMenu.addButton(
-		// 	this.name + '.cell',
-		// 	this.captionButton,
-		// 	i18n.t('floatingmenu.tab.table'),
-		// 	1
-		// );
+							// blur all editables within the table
+							that.activeTable.obj.find('div.aloha-table-cell-editable').blur();
+
+							cDiv.focus();
+							newRange.select();
+							Aloha.Selection.updateSelection();
+						}
+					}
+				}
+      },
+
+      /**
+       * Selection change callback
+       * @override
+       */
+      selectionChange: function() {
+        //var value = Aloha.queryCommandValue( "createLink" );
+        //this.setState( !!value );
+      }
+    });
 
 		// for cells
 		// add summary field
@@ -1223,6 +1243,40 @@ define( [
 		// 		1
 		// 	);
 		// }
+    //
+
+    /**
+     * Cite details component
+     * @class
+     * @extends {Component}
+     */
+    Component.define( "tableSummary", Component, {
+      /**
+       * Initializes the cite details panel
+       * @override
+       */
+      init: function() {
+        this.element = jQuery( "<div>" );
+
+        this.linkElem = jQuery( "<label>Summary: <input></label>" )
+          .appendTo( this.element )
+          .children( "input" )
+            .attr("width", "275")
+            .addClass( "aloha-ui-fill" )
+            .bind( "keyup", function() {
+              that.activeTable.checkWai();
+            });
+      },
+
+      /**
+       * Selection change callback
+       * @override
+       */
+      selectionChange: function() {
+      }
+    });
+
+
 	};
 
 	/**

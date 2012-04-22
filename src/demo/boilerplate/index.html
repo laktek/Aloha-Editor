@@ -120,7 +120,7 @@
           {
             label: "Table",
             showOn: true, 
-            components: [ [ "mergecells", "splitcells", "formatTable"] ]
+            components: [ [ "mergecells", "splitcells", "tableCaption", "formatTable"] ]
           },
 
           {
@@ -144,6 +144,14 @@
             showOn: "q",
             components: [
               "citeDetails"
+            ]
+          },
+
+          {
+            label: "Table",
+            showOn: "table",
+            components: [
+              "tableSummary"
             ]
           }
         ],
