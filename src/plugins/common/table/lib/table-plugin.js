@@ -156,17 +156,6 @@ define( [
 			}
 
 			if (Aloha.activeEditable) {
-				// get Plugin configuration
-				var config = that.getEditableConfig( Aloha.activeEditable.obj );
-
-				// show hide buttons regarding configuration and DOM position
-        // Note: To be removed (handled via Aloha.Settings now)
-				// if ( jQuery.inArray('table', config) != -1  && Aloha.Selection.mayInsertTag('table') ) {
-				// 	that.createTableButton.show();
-				// } else {
-				// 	that.createTableButton.hide();
-				// }
-
 				var table = rangeObject.findMarkup(function () {
 					return this.nodeName.toLowerCase() == 'table';
 				}, Aloha.activeEditable.obj);
@@ -513,8 +502,7 @@ define( [
     });
 
     // Format as a row header
-    // TODO: Use a ToggleButton
-    Component.define( "rowheader", Button, {
+    Component.define( "rowheader", ToggleButton, {
       /**
        * Localized label
        * @type {string}
@@ -542,18 +530,17 @@ define( [
 			  if (that.activeTable) {
 				  var sc = that.activeTable.selection.selectedCells;
 				  that.rowsToSelect = [];
-				  var makeHeader = ( 
-        			  sc[0] && sc[0].nodeName.toLowerCase() == 'td' && sc.length == 1 ||
-        				  sc[0] && sc[0].nodeName.toLowerCase() == 'td' && 
-        				  sc[1].nodeName.toLowerCase() == 'td' );
-				  // if a selection was made, transform the selected cells
+
+          var isHeader = that.activeTable.selection.isHeader();
+
+          // if a selection was made, transform the selected cells
 				  for (var i = 0; i < sc.length; i++) {
 					  //            for (var j = 0; j < sc[i].length; j++) {
 					  if (i == 0) {
 						  that.rowsToSelect.push(sc[i].rowIndex);
 					  }
 					  
-					  if ( makeHeader ) {
+					  if ( !isHeader ) {
             			  sc[i] = Aloha.Markup.transformDomObject(sc[i], 'th').attr('scope', 'col')[0];
 					  } else { 
             			  sc[i] = Aloha.Markup.transformDomObject(sc[i], 'td').removeAttr('scope')[0];
@@ -584,7 +571,22 @@ define( [
 					  that.activeTable.selectRows();
 				  }
 			  }
-		  }
+		  },
+      
+      /**
+       * Selection change callback
+       * @override
+       */
+      selectionChange: function(range){
+        if(that.activeTable){
+          var sc = that.activeTable.selection.selectedCells;
+          var isHeader = that.activeTable.selection.isHeader();
+ 
+          this.setState( isHeader ); 
+        } else {
+          this.setState( false ); 
+        } 
+      }
     });
    
     /**
@@ -784,7 +786,7 @@ define( [
 
     // Format as a column header
     // TODO: Use a ToggleButton
-    Component.define( "columnheader", Button, {
+    Component.define( "columnheader", ToggleButton, {
       /**
        * Localized label
        * @type {string}
@@ -838,6 +840,19 @@ define( [
             that.activeTable.selection.unselectCells();
             that.activeTable.selection.selectColumns( selectedColumnIdxs );
         }
+      },
+
+      /**
+       * Selection change callback
+       * @override
+       */
+      selectionChange: function(){
+        if(that.activeTable){
+          var isHeader = that.activeTable.selection.isHeader();
+          this.setState( isHeader ); 
+        } else {
+          this.setState( false ); 
+        } 
       }
 
     });
@@ -1171,7 +1186,13 @@ define( [
        */
       selectionChange: function() {
         //var value = Aloha.queryCommandValue( "createLink" );
-        //this.setState( !!value );
+        if(that.activeTable){
+          if(that.activeTable.obj.children('caption').length > 0){
+            this.setState( true );
+          }
+        } else {
+          this.setState( false );
+        }
       }
     });
 
@@ -1323,8 +1344,6 @@ define( [
 			TablePlugin.TableRegistry[i].hasFocus = false;
 		}
 		if (typeof focusTable != 'undefined') {
-      // Note: Commented till summaries are fixed.
-			//this.summary.setTargetObject(focusTable.obj, 'summary');
 			if ( focusTable.obj.children("caption").is('caption') ) {
 				// set caption button
         // Note: Commented till captions are fixed.
