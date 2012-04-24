@@ -78,9 +78,15 @@ define([
 			//       "incorrect" elements--that is, not the element or parents
 			//       of the element you clicked on.
 			Aloha.bind( "aloha-selection-changed", function( event, range ) {
-				if ( Surface.active ) {
+				if ( Surface.active ) 
 					Container.showContainers( Surface.active, range );
-				}
+			});
+
+      // When a special selection event is triggered (for example table selection changed),
+      // toggle the appropriate containers
+      Aloha.bind( "aloha-special-selection-changed", function( event, elements, selection_type ) {
+				if ( Surface.active ) 
+					Container.showContainersForContext( Surface.active, elements, selection_type );
 			});
 		},
 

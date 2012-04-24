@@ -109,7 +109,7 @@ define([
 	jQuery.extend( Container, {
 		/**
 		 * Normalizes a showOn option into a function
-		 * @param {(string|boolean|function)} showOwn
+		 * @param {(string|boolean|function)} showOn
 		 * @return function
 		 */
 		normalizeShowOn: (function() {
@@ -124,7 +124,7 @@ define([
 					return showOn;
 				case 'string':
 					if ( !stringFns[ showOn ] ) {
-						stringFns[ showOn ] = function( el ) {
+						stringFns[ showOn ] = function( el, ev ) {
 							return el ? jQuery( el ).is( showOn ) : false;
 						};
 					}
@@ -141,6 +141,7 @@ define([
 		 * @TODO(petro): Figure out a way to leave out containers which belong in
 		 *               deactivated (hidden) toolbars from being shown, since this
 		 *               is unnecessary work.
+     * @param {object} editable Active editable
 		 * @param {object} range The range to show containers for
 		 * @static
 		 */
@@ -158,20 +159,39 @@ define([
 				elements.push( element );
 			}
 
-			for ( groupKey in editable.container.groups ) {
-				show = false;
-				group = editable.container.groups[ groupKey ];
+		  Container.showContainersForContext(editable, elements); 
+		},
 
-				j = elements.length;
-				while ( j ) {
-					if ( group.shouldShow( elements[ --j ] ) ) {
-						show = true;
-						break;
-					}
-				}
+    /**
+		 * Given an array of elements, show appropriate containers.
+		 *
+     * @param {object} editable Active editable
+		 * @param {object} elements An array of elements to show containers for
+		 * @param {string} event_type Type of the event triggered (optional) 
+		 * @static
+		 */
+		showContainersForContext: function( editable, elements, event_type ) {
+			var group, groupKey, show, j, element,
+				isEditingHost = GENTICS.Utils.Dom.isEditingHost,
+				// Add a null object to the elements array so that we can test whether
+				// the panel should be activated when we have no effective elements in
+				// the current selection.
+				elements = elements || [ null ];
 
-				toggleContainers( group.containers, show );
-			}
+        for ( groupKey in editable.container.groups ) {
+          show = false;
+          group = editable.container.groups[ groupKey ];
+
+          j = elements.length;
+          while ( j ) {
+            if ( group.shouldShow( elements[ --j ], event_type ) ) {
+              show = true;
+              break;
+            }
+          }
+
+          toggleContainers( group.containers, show );
+        }
 		}
 	});
 
