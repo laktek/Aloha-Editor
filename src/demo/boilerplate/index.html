@@ -148,7 +148,7 @@
 
           {
             label: "Table",
-            showOn: true,
+            showOn: function(el, ev){ return ev === "table" }, 
             components: [
               "tableSummary"
             ]
