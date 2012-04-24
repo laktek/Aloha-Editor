@@ -22,6 +22,7 @@ define( [
 	'ui/button',
 	'ui/toggleButton',
 	"ui/multiSplit",
+	"ui/tab",
 	'ui/ui',
 
 	'css!table/css/table.css'
@@ -40,6 +41,7 @@ define( [
            Button,
            ToggleButton,
            MultiSplit,
+           Tab,
            Ui  ) {
 
 	var GENTICS = window.GENTICS;
@@ -145,7 +147,7 @@ define( [
 		Aloha.bind( 'aloha-table-selection-changed', function () {
 			if ( null != TablePlugin.activeTable &&
 					0 !== TablePlugin.activeTable.selection.selectedCells.length ) {
-				TablePlugin.updateFloatingMenuScope();
+        Aloha.trigger("aloha-special-selection-changed", [ TablePlugin.activeTable.selection.selectedCells, TablePlugin.activeTable.selection.selectionType ]);
 			}
 		});
 
@@ -163,7 +165,8 @@ define( [
 				if ( that.activeTable ) {
 					// check whether we are inside a table
 					if ( table ) {
-						TablePlugin.updateFloatingMenuScope();
+            Aloha.trigger("aloha-special-selection-changed", [ [null], "table" ]);
+						//TablePlugin.updateFloatingMenuScope();
 					} else {
 						//reset cell selection flags
 						that.activeTable.selection.cellSelectionMode = false; 
@@ -237,8 +240,7 @@ define( [
 				} );
 			}
 		} );
-		
-		
+
 	};
 
   /**
@@ -785,7 +787,6 @@ define( [
     });
 
     // Format as a column header
-    // TODO: Use a ToggleButton
     Component.define( "columnheader", ToggleButton, {
       /**
        * Localized label

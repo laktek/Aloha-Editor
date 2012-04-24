@@ -1336,6 +1336,8 @@ define( [
 			columnsToSelect = this.columnsToSelect;
 		}
 
+		//Aloha.trigger( 'aloha-column-selected' );
+
     /*
 		// ====== BEGIN UI specific code - should be handled on event aloha-table-selection-changed by UI =======
 		// activate all column formatting button

@@ -119,20 +119,19 @@
 
           {
             label: "Table",
-            showOn: true, 
+            showOn: function(el, ev){ return ev === "table" }, 
             components: [ [ "mergecells", "splitcells", "tableCaption", "formatTable"] ]
           },
 
-          {
+          { 
             label: "Column",
-            showOn: true, 
+            showOn: function(el, ev){ return ev === "column" }, 
             components: [ ["addcolumnleft", "addcolumnright", "deletecolumns", "columnheader", "mergecells", "splitcells", "formatColumn"] ]
           },
 
-
           {
             label: "Row",
-            showOn: true, 
+            showOn: function(el, ev){ return ev === "row" }, 
             components: [ ["addrowbefore", "addrowafter", "deleterows", "rowheader", "mergecells", "splitcells", "formatRow"] ]
           }
 
