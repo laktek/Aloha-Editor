@@ -389,7 +389,7 @@ function(Aloha, jQuery, Ext, Class, console) {
 		 * @hide
 		 */
 		init: function() {
-
+			return; // Don't initialize the floating menu in jQuery UI branch
 			// check for behaviour setting of the floating menu
 		    if (Aloha.settings.floatingmenu) {
 		    	
