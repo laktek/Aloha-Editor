@@ -28,16 +28,22 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 	 * @private
 	 * @const
 	 */
-	var INLINE_FORMATTING_BUTTONS = [ 'bold', 'italic', 'strikethrough',
-		'subscript', 'superscript', 'underline' ];
+	var INLINE_FORMATTING_BUTTONS = [
+		'bold',
+		'italic',
+		'strikethrough', 'subscript', 'superscript',
+		'underline'
+	];
 
 	/**
 	 * @type {Array.<string>} Default block formatting options.
 	 * @private
 	 * @const
 	 */
-	var FORMAT_BLOCK_BUTTONS = [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-		'pre' ];
+	var FORMAT_BLOCK_BUTTONS = [
+		'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+		'p', 'pre'
+	];
 
 	/**
 	 * @type {Array.<string>} Set the default formats according to the
