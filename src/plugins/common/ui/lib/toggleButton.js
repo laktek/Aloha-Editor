@@ -21,18 +21,17 @@ function( jQuery, Button ) {
 		 * The `setState()' method updates the visual display of the
 		 * toggleButton, and sets the state of the button.
 		 *
-		 * @param {boolean} on
+		 * @param {boolean} toggled
 		 */
-		setState: function( on ) {
-			this.buttonElement.prop( 'checked', on ); //.button( 'refresh' );
-			if (this.command == 'bold') console.warn(this,this.buttonElement.prop('checked'));
+		setState: function( toggled ) {
+			this.buttonElement.prop( 'checked', toggled ).button( 'refresh' );
 		},
 
 		/**
 		 * Creates the element to be used as the button.
 		 *
 		 * @override
-		 * @returns {jQuery<HTMLElement>}
+		 * @return {jQuery<HTMLElement>}
 		 */
 		createButtonElement: function() {
 			// Generate a unique id for the button until jQuery UI supports

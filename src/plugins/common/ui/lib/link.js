@@ -285,7 +285,7 @@ function( Aloha, jQuery, i18n, Browser, Component, Surface, Autocomplete, Button
 		 * Creates a link target option
 		 * @param {string} value
 		 * @param {string} label
-		 * @returns {jQuery}
+		 * @return {jQuery}
 		 */
 		createTarget: function( value, label ) {
 			return jQuery(

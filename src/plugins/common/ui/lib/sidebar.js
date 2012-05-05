@@ -70,7 +70,7 @@ define([
 		/**
 		 * Creates a sidebar for an editable
 		 * @param {Aloha.Editable} editable
-		 * @returns {Sidebar}
+		 * @return {Sidebar}
 		 */
 		createSurface: function( editable ) {
 			if ( editable.settings.sidebar && editable.settings.sidebar.length ) {

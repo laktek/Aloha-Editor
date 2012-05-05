@@ -79,7 +79,7 @@ function( Aloha, jQuery, Class ) {
 		 * @param {string} name Component name
 		 * @param {Component} type Component type to inherit from
 		 * @param {Object} settings Settings to configure component type
-		 * @returns {Component} Generated component class
+		 * @return {Component} Generated component class
 		 */
 		define: function( name, type, settings ) {
 			return Component.components[ name ] = type.extend( settings );
@@ -89,7 +89,7 @@ function( Aloha, jQuery, Class ) {
 		 * Renders a component for an editable
 		 * @param {string} name Name of component to render
 		 * @param {Aloha.Editable} editable Editable to associate component with
-		 * @returns {Component}
+		 * @return {Component}
 		 */
 		render: function( name, editable ) {
 			var component = Component.components[ name ];

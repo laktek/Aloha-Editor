@@ -28,9 +28,7 @@ function( Aloha, Surface, Component, ToggleButton ) {
 		 *        this component is rendered is visible.
 		 */
 		click: function() {
-			if (this.command === 'bold') console.log(this.buttonElement.prop('checked'));
 			Aloha.execCommand( this.command, false, null, Surface.range );
-			if (this.command === 'bold') console.log(this.buttonElement.prop('checked'));
 		},
 
 		/**
