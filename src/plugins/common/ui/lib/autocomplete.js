@@ -2,7 +2,6 @@ define([
 	"aloha/jquery",
 	"aloha/repositorymanager",
 	"ui/component",
-	
 	"jquery-plugin!./vendor/jquery-ui-autocomplete-html"
 ],
 function( jQuery, RepositoryManager, Component ) {
