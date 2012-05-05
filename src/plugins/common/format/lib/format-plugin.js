@@ -23,56 +23,12 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 	'use strict';
 
 	/**
-	 * @type {Array.<string>} Default inline formatting buttons.
-	 * @private
-	 * @const
-	 */
-	var INLINE_FORMATTING_BUTTONS = [
-		'bold',
-		'italic',
-		'strikethrough', 'subscript', 'superscript',
-		'underline'
-	];
-
-	/**
-	 * @type {Array.<string>} Default block formatting options.
-	 * @private
-	 * @const
-	 */
-	var FORMAT_BLOCK_BUTTONS = [
-		'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-		'p', 'pre'
-	];
-
-	/**
-	 * @type {Array.<string>} Set the default formats according to the
-	 *                        `removeFormatting()' command.
-	 * @private
-	 * @const
-	 */
-	var FORMATS_TO_REMOVE = [
-		'abbr', 'acronym',
-		'b', 'bdi', 'bdo', 'big', 'blink',
-		'cite', 'code',
-		'dfn', 'em',
-		'font',
-		'i', 'ins',
-		'kbd',
-		'mark',
-		'nobr',
-		'q',
-		's', 'samp', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
-		'tt',
-		'u',
-		'var'
-	];
-
-	/**
 	 * Define inline formatting buttons components.
 	 *
 	 * @private
+	 * @param {Array.<object>} buttons
 	 */
-	function initInlineFormattingButtons() {
+	function initInlineFormattingButtons(buttons) {
 		// The bold component is a
 		// [toggleCommandButton](toggleCommandButton.html) that ties into the
 		// bold command.  The button will automatically update its state
@@ -80,7 +36,7 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 		// styling when the button is clicked.  This functionality comes from
 		// the toggleButton which knows how to hook into the associated
 		// command.
-		jQuery.each( INLINE_FORMATTING_BUTTONS, function( i, command ) {
+		jQuery.each( buttons, function( i, command ) {
 			Component.define( command, ToggleCommandButton, {
 				command  : command,
 				label    : i18n.t( 'button.' + command + '.label' ),
@@ -89,7 +45,6 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 			});
 		});
 	}
-
 
 	/**
 	 * Local reference to the `RangeObject' constructor.
@@ -110,10 +65,52 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 		languages: [ 'en', 'de', 'fr', 'eo', 'fi', 'ru', 'it', 'pl' ],
 
 		/**
+		 * @type {Array.<string>} Default inline formatting buttons.
+		 * @private
+		 */
+		inlineFormattingButtons: [
+			'bold',
+			'italic',
+			'strikethrough', 'subscript', 'superscript',
+			'underline'
+		],
+
+		/**
+		 * @type {Array.<string>} Default block formatting options.
+		 * @private
+		 */
+		formatBlockButtons: [
+			'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+			'p', 'pre'
+		],
+
+		/**
+		 * @type {Array.<string>} Set the default formats according to the
+		 *                        `removeFormatting()' command.
+		 * @private
+		 */
+		formatsToRemove: [
+			'abbr', 'acronym',
+			'b', 'bdi', 'bdo', 'big', 'blink',
+			'cite', 'code',
+			'dfn', 'em',
+			'font',
+			'i', 'ins',
+			'kbd',
+			'mark',
+			'nobr',
+			'q',
+			's', 'samp', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
+			'tt',
+			'u',
+			'var'
+		],
+
+		/**
 		 * Initialize the plugin and set initialize flag to true.
 		 */
 		init: function() {
-			initInlineFormattingButtons();
+			initInlineFormattingButtons(this.inlineFormattingButtons);
 			this._initFormatBlock();
 		},
 
@@ -134,11 +131,11 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 				/**
 				 * Gets the buttons for the multi split menu.
 				 *
-				 * @returns {Array.<Object>}
+				 * @return {Array.<Object>}
 				 */
 				getButtons: function() {
 					// TODO: Finalize on how the settings should be given
-					return jQuery.map( FORMAT_BLOCK_BUTTONS, function( item ) {
+					return jQuery.map( plugin.formatBlockButtons, function( item ) {
 						return FormatBlock._buttons[ item ];
 					});
 				},
@@ -146,7 +143,7 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 				/**
 				 * Gets the items for bottom of the multi split menu.
 				 *
-				 * @returns {Array.<Object>}
+				 * @return {Array.<Object>}
 				 */
 				getItems: function() {
 					return [{
@@ -166,7 +163,7 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 			 */
 			FormatBlock._buttons = {};
 
-			jQuery.each( FORMAT_BLOCK_BUTTONS, function( i, block ) {
+			jQuery.each( this.formatBlockButtons, function( i, block ) {
 				FormatBlock._buttons[ block ] = {
 					label : i18n.t( 'button.' + block + '.label' ),
 					icon  : 'aloha-large-icon-' + block,
@@ -202,7 +199,7 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 			}
 
 			// TODO: check the difference between range and rangeObject
-			Aloha.execCommand('removeformat', false, FORMATS_TO_REMOVE , range);
+			Aloha.execCommand('removeformat', false, formatsToRemove , range);
 
 			rangeObject.select();
 
