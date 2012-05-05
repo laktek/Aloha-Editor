@@ -29,7 +29,17 @@
 			require(['aloha/jquery'], function(value) {
 				var $ = value;
 				$.ajax({
-					type: 'GET',
+ 					type: 'GET',
+					// Avoid strange asynchronous loading errors.
+					// The particular case where this occurred was loading the
+					// jquery-ui-autocomplete-html vendor file in ui/lib/autocomplete.js.
+					// The problem was reproducable in the boilerplate demo: it never
+					// loaded on my system. It is unknown why synchronous loading solves
+					// the problem (I was just trying various things). Since there were
+					// serveral cases in the past where asynchronous loading caused
+					// problems, which were not clearly reproducable, it's best to leave
+					// this on even if the autocomplete.js problem is fixed in the future.
+					async: false,
 				  	url: url,
 				  	cache: true,
 				  	dataType: 'text',
