@@ -1,0 +1,1 @@
+- Changed the way the Aloha.getAlohaUrl() determines the URL leading up to the aloha.js script include.
