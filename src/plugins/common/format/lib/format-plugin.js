@@ -1,4 +1,3 @@
-/*global define:true*/
 /*!
  * Aloha Editor
  * Author & Copyright (c) 2010-2012 Gentics Software GmbH
@@ -176,7 +175,6 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 							Surface.range );
 					},
 					isActive: function() {
-						console.log('isActivate called');
 						return ( Aloha.queryCommandValue( 'formatBlock' ) ===
 							block );
 					}

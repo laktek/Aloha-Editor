@@ -1,45 +1,58 @@
 define([
-	"aloha/jquery",
-	"ui/button"
+	'aloha/jquery',
+	'ui/button'
 ],
 function( jQuery, Button ) {
-	var guid = 0;
+	'use strict';
 
-	// The toggleButton extends the button component type to provide an easy
-	// way to create buttons for commands that are either on or off.
+	var uid = 0;
+
 	/**
-	 * ToggleButton component type
+	 * The toggleButton extends the button component type to provide an easy
+	 * way to create buttons for commands that are either on or off.
+	 *
 	 * @class
-	 * @extends {Button}
+	 * @name Aloha.ui.ToggleButton
+	 * @extends {Aloha.ui.Button}
 	 */
 	var ToggleButton = Button.extend({
-		// The `setState()` method updates the visual display of the toggleButton.
+
 		/**
-		 * Sets the state of the button
+		 * The `setState()' method updates the visual display of the
+		 * toggleButton, and sets the state of the button.
+		 *
 		 * @param {boolean} on
 		 */
 		setState: function( on ) {
-			this.buttonElement.prop( "checked", on ).button( "refresh" );
+			this.buttonElement.prop( 'checked', on ); //.button( 'refresh' );
+			if (this.command == 'bold') console.warn(this,this.buttonElement.prop('checked'));
 		},
 
 		/**
-		 * Creates the element to be used as the button
+		 * Creates the element to be used as the button.
+		 *
 		 * @override
-		 * @returns {jQuery}
+		 * @returns {jQuery<HTMLElement>}
 		 */
 		createButtonElement: function() {
-			// generate a unique id for the button until jQuery UI supports
+			// Generate a unique id for the button until jQuery UI supports
 			// implicit labels (http://bugs.jqueryui.com/ticket/6063)
-			var id = "aloha-toggleButton-" + (guid++);
-			this.element = jQuery( "<span>" );
-			jQuery( "<label>", {
+			var id = 'aloha-toggleButton-' + (++uid);
+
+			this.element = jQuery( '<span>' );
+
+			jQuery( '<label>', {
 				text: this.label,
-				"for": id
+				'for': id
 			}).appendTo( this.element );
-			return this.buttonElement = jQuery( "<input type='checkbox'>" )
-				.attr( "id", id )
+
+			this.buttonElement = jQuery( '<input type="checkbox">' )
+				.attr( 'id', id )
 				.appendTo( this.element );
+
+			return this.buttonElement;
 		}
+
 	});
 
 	return ToggleButton;

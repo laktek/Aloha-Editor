@@ -1,22 +1,26 @@
 define([
-	"aloha/jquery",
-	"ui/component"
+	'aloha/jquery',
+	'ui/component'
 ],
 function( jQuery, Component ) {
-	// The button component type creates a simple button.
-	// Buttons have no state, they only respond to click events.
+	'use strict';
+
 	/**
-	 * Button component type
+	 * The button component type creates a simple button.
+	 * Buttons have no state, they only respond to click events.
+	 *
 	 * @class
-	 * @extends {Component}
+	 * @name {Aloha.ui.Button}
+	 * @extends {Aloha.ui.Component}
 	 */
 	var Button = Component.extend({
-		// The `init` method is invoked when the component is rendered, not when it
-		// is created. This is necessary to allow multiple renderings of the same
-		// component. For example, you may want a component to be in the toolbar
-		// and in the sidebar.
+
 		/**
-		 * Initializes the button
+		 * The `init()' method is invoked when the component is rendered, not
+		 * when it is created.  This is necessary to allow multiple renderings
+		 * of the same component.  For example, you may want a component to be
+		 * in the toolbar and in the sidebar.
+		 *
 		 * @override
 		 */
 		init: function() {
@@ -29,11 +33,11 @@ function( jQuery, Component ) {
 						primary: this.icon
 					}
 				})
-				.button( "widget" )
+				.button( 'widget' )
 					.tooltip({
 						position: {
-							my: "left top",
-							at: "right bottom"
+							my: 'left top',
+							at: 'right bottom'
 						}
 					})
 					.click( jQuery.proxy(function() {
@@ -41,19 +45,22 @@ function( jQuery, Component ) {
 					}, this ) );
 		},
 
-		// The `click()` method is invoked whenever the user clicks the rendered button.
 		/**
-		 * Click callback
+		 * The `click()' method is invoked whenever the user clicks the
+		 * rendered button.
 		 */
 		click: function() {},
 
 		/**
 		 * Creates the element to be used as the button
-		 * @returns {jQuery}
+		 *
+		 * @return {jQuery<HTMLElement>}
 		 */
 		createButtonElement: function() {
-			return this.element = this.buttonElement = jQuery( "<button>" );
+			this.element = this.buttonElement = jQuery( '<button>' );
+			return this.buttonElement;
 		}
+
 	});
 
 	return Button;
