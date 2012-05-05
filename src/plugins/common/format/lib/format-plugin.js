@@ -25,16 +25,16 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 
 	/**
 	 * @type {Array.<string>} Default inline formatting buttons.
-	 * @const
 	 * @private
+	 * @const
 	 */
 	var INLINE_FORMATTING_BUTTONS = [ 'bold', 'italic', 'strikethrough',
 		'subscript', 'superscript', 'underline' ];
 
 	/**
 	 * @type {Array.<string>} Default block formatting options.
-	 * @const
 	 * @private
+	 * @const
 	 */
 	var FORMAT_BLOCK_BUTTONS = [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 		'pre' ];
@@ -42,8 +42,8 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 	/**
 	 * @type {Array.<string>} Set the default formats according to the
 	 *                        `removeFormatting()' command.
-	 * @const
 	 * @private
+	 * @const
 	 */
 	var FORMATS_TO_REMOVE = [
 		'abbr', 'acronym',
@@ -63,7 +63,7 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 	];
 
 	/**
-	 * Add inline formatting buttons.
+	 * Define inline formatting buttons components.
 	 *
 	 * @private
 	 */
@@ -88,8 +88,11 @@ function( Aloha, Plugin, jQuery, Component, Surface, ToggleCommandButton,
 
 	/**
 	 * Local reference to the `RangeObject' constructor.
-	 * @constructor
 	 * @param {Aloha.Range} range.
+	 * @return {GENTICS.Utils.RangeObject} A utility RangeObject what wraps the
+	 *                                     given range.
+	 * @constructor
+	 * @private
 	 */
 	var RangeObject = window.GENTICS.Utils.RangeObject;
 
