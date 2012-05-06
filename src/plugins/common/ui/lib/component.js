@@ -67,6 +67,7 @@ function( Aloha, jQuery, Class ) {
 		selectionChange: function() {}
 	});
 
+	// static fields
 	jQuery.extend( Component, {
 		/**
 		 * List of all defined components
@@ -86,7 +87,7 @@ function( Aloha, jQuery, Class ) {
 		},
 
 		/**
-		 * Renders a component for an editable
+		 * Renders a defined component for an editable
 		 * @param {string} name Name of component to render
 		 * @param {Aloha.Editable} editable Editable to associate component with
 		 * @return {Component}

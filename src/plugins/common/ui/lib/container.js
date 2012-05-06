@@ -106,6 +106,7 @@ define([
 		hide: function() {}
 	});
 
+	// static fields
 	jQuery.extend( Container, {
 		/**
 		 * Normalizes a showOn option into a function
@@ -141,7 +142,7 @@ define([
 		 * @TODO(petro): Figure out a way to leave out containers which belong in
 		 *               deactivated (hidden) toolbars from being shown, since this
 		 *               is unnecessary work.
-     * @param {object} editable Active editable
+		 * @param {object} editable Active editable
 		 * @param {object} range The range to show containers for
 		 * @static
 		 */
@@ -153,53 +154,52 @@ define([
 				// the current selection.
 				elements = [ null ];
 
-			if ( ! editable.container ) {
-				// This case, where the container property is undefined, occurred while
-				// implementing a custom toolbar containing plugin defined components.
-				// The container is undefined error occurred when clicking into an editable.
-				// TODO: This is a quick fix and the real cause should probably be fixed somewhere else.
-				return;
-			}
-
 			for ( element = range.startContainer;
 					!isEditingHost( element );
 					element = element.parentNode ) {
 				elements.push( element );
 			}
 
-		  Container.showContainersForContext(editable, elements); 
+			Container.showContainersForContext(editable, elements); 
 		},
 
-    /**
+		/**
 		 * Given an array of elements, show appropriate containers.
 		 *
-     * @param {object} editable Active editable
+		 * @param {object} editable Active editable
 		 * @param {object} elements An array of elements to show containers for
 		 * @param {string} event_type Type of the event triggered (optional) 
 		 * @static
 		 */
 		showContainersForContext: function( editable, elements, event_type ) {
-			var group, groupKey, show, j, element,
-				isEditingHost = GENTICS.Utils.Dom.isEditingHost,
-				// Add a null object to the elements array so that we can test whether
-				// the panel should be activated when we have no effective elements in
-				// the current selection.
-				elements = elements || [ null ];
+			var group, groupKey, show, j, element;
+			var isEditingHost = GENTICS.Utils.Dom.isEditingHost;
+			// Add a null object to the elements array so that we can test whether
+			// the panel should be activated when we have no effective elements in
+			// the current selection.
+			var elements = elements || [ null ];
+			var container = editable.container;
 
-        for ( groupKey in editable.container.groups ) {
-          show = false;
-          group = editable.container.groups[ groupKey ];
+			if ( ! container ) {
+				// No containers were constructed for the given editable,
+				// so there is nothing for us to do.
+				return;
+			}
 
-          j = elements.length;
-          while ( j ) {
-            if ( group.shouldShow( elements[ --j ], event_type ) ) {
-              show = true;
-              break;
-            }
-          }
+			for ( groupKey in container.groups ) {
+				show = false;
+				group = container.groups[ groupKey ];
 
-          toggleContainers( group.containers, show );
-        }
+				j = elements.length;
+				while ( j ) {
+					if ( group.shouldShow( elements[ --j ], event_type ) ) {
+						show = true;
+						break;
+					}
+				}
+
+				toggleContainers( group.containers, show );
+			}
 		}
 	});
 
