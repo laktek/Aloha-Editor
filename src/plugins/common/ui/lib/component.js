@@ -1,23 +1,33 @@
-// The main UI objects are components.
-// Components can be placed inside any container, such as a toolbar or sidebar.
 define([
-	"aloha/core",
-	"aloha/jquery",
-	"util/class",
+	'aloha/core',
+	'aloha/jquery',
+	'util/class',
 ],
 function( Aloha, jQuery, Class ) {
-	// All components inherit from `Component`.
+	'use strict';
+
 	/**
-	 * Component class and manager
+	 * Component class and manager.
+	 *
+	 * The main UI objects are components.  Components can be placed inside any
+	 * container, such as a toolbar or sidebar.
+	 *
 	 * @class
 	 * @base
 	 */
 	var Component = Class.extend({
+
+		/**
+		 * @type {boolean} Whether or not this component is visible.
+		 */
 		visible: true,
 
 		/**
-		 * Component constructor
-		 * @param {Aloha.Editable} editable
+		 * Component constructor.
+		 *
+		 * @param {Aloha.Editable} editable The editable to which this
+		 *                                  component will interact with for
+		 *                                  the extent of its lifetime.
 		 * @constructor
 		 */
 		_constructor: function( editable ) {
@@ -25,23 +35,24 @@ function( Aloha, jQuery, Class ) {
 
 			// Components are responsible for updating their state and visibility
 			// whenever the selection changes.
-			// TODO(p.salema@gentics.com): Consider implementing "aloha-node-changed'
+			// TODO(p.salema@gentics.com): Consider implementing 'aloha-node-changed'
 			// which would be trigger only when the user selection moves from one node
 			// into another.
-			Aloha.bind( "aloha-selection-changed aloha-command-executed", jQuery.proxy( function( event, range ) {
-				this.selectionChange( range );
-			}, this ) );
+			Aloha.bind( 'aloha-selection-changed aloha-command-executed',
+				jQuery.proxy( function( event, range ) {
+					this.selectionChange( range );
+				}, this ) );
 
 			this.init();
 		},
 
 		/**
-		 * Initializes the component
+		 * Initializes this component.  To be implemented in subclasses.
 		 */
 		init: function() {},
 
 		/**
-		 * Shows the component
+		 * Shows this component.
 		 */
 		show: function() {
 			if ( !this.visible ) {
@@ -51,7 +62,7 @@ function( Aloha, jQuery, Class ) {
 		},
 
 		/**
-		 * Hides the component
+		 * Hides this component.
 		 */
 		hide: function() {
 			if ( this.visible ) {
@@ -60,41 +71,47 @@ function( Aloha, jQuery, Class ) {
 			this.visible = false;
 		},
 
-		// usually overridden by the component or the settings
 		/**
-		 * Selection change callback
+		 * Selection change callback.
+		 * Usually overridden by the component or the settings that are passed
+		 * to the constructor at instantialization.
 		 */
 		selectionChange: function() {}
+
 	});
 
-	// static fields
+	// Static fields.
+
 	jQuery.extend( Component, {
+
 		/**
-		 * List of all defined components
-		 * @type {Object.<string, Component>}
+		 * @type {object.<Aloha.ui.Component>} A List of all defined components.
 		 */
 		components: {},
 
 		/**
-		 * Defines a component
-		 * @param {string} name Component name
-		 * @param {Component} type Component type to inherit from
-		 * @param {Object} settings Settings to configure component type
-		 * @return {Component} Generated component class
+		 * Defines a component.
+		 *
+		 * @param {string} name Component name.
+		 * @param {Aloha.ui.Component} type Component type to inherit from.
+		 * @param {object} settings Settings to configure component type.
+		 * @return {Aloha.ui.Component} Generated component class.
 		 */
 		define: function( name, type, settings ) {
-			return Component.components[ name ] = type.extend( settings );
+			Component.components[ name ] = type.extend( settings );
+			return Component.components[ name ];
 		},
 
 		/**
-		 * Renders a defined component for an editable
-		 * @param {string} name Name of component to render
-		 * @param {Aloha.Editable} editable Editable to associate component with
-		 * @return {Component}
+		 * Renders a defined component for an editable.
+		 *
+		 * @param {string} name Name of component to render.
+		 * @param {Aloha.Editable} editable Editable to associate component with.
+		 * @return {Aloha.ui.Component} This component.
 		 */
 		render: function( name, editable ) {
-			var component = Component.components[ name ];
-			return new component( editable );
+			var ComponentType = Component.components[ name ];
+			return new ComponentType( editable );
 		}
 	});
 
