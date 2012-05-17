@@ -5,39 +5,37 @@ define([
 function( jQuery, Button ) {
 	'use strict';
 
-	var uid = 0;
+	var idCounter = 0;
 
 	/**
-	 * The toggleButton extends the button component type to provide an easy
-	 * way to create buttons for commands that are either on or off.
+	 * ToggleButton control. Extends the Button component type to provide an
+	 * easy way to create buttons that can transition between "checked" and
+	 * "unchecked" states.
 	 *
 	 * @class
-	 * @name Aloha.ui.ToggleButton
-	 * @extends {Aloha.ui.Button}
+	 * @name ToggleButton
+	 * @extends {Button}
 	 */
 	var ToggleButton = Button.extend({
 
 		/**
-		 * The `setState()' method updates the visual display of the
-		 * toggleButton, and sets the state of the button.
+		 * Sets the state of the toggleButton and updates its visual display
+		 * accordingly.
 		 *
-		 * @param {boolean} toggled
+		 * @param {boolean} toggled Whether the button is to be set to the
+		 *                          "toggled/checked" state.
 		 */
 		setState: function( toggled ) {
 			this.buttonElement.prop( 'checked', toggled ).button( 'refresh' );
 		},
 
 		/**
-		 * Creates the element to be used as the button.
-		 *
 		 * @override
-		 * @return {jQuery<HTMLElement>}
 		 */
 		createButtonElement: function() {
 			// Generate a unique id for the button until jQuery UI supports
-			// implicit labels (http://bugs.jqueryui.com/ticket/6063)
-			var id = 'aloha-toggleButton-' + (++uid);
-
+			// implicit labels (http://bugs.jqueryui.com/ticket/6063).
+			var id = 'aloha-toggleButton-' + ( ++idCounter );
 			this.element = jQuery( '<span>' );
 
 			jQuery( '<label>', {

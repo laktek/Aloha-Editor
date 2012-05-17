@@ -1,3 +1,8 @@
+/**
+ * NOTES:
+ *    - Why do we maintain 2 references to the DOM element for a button component (this.element = this.buttonElement)?
+ */
+
 define([
 	'aloha/jquery',
 	'ui/component'
@@ -6,20 +11,24 @@ function( jQuery, Component ) {
 	'use strict';
 
 	/**
-	 * The button component type creates a simple button.
+	 * Implements a simple button component.  All interactive UI controls (that
+	 * is--anything that is not a label) will most probably extend the Button
+	 * component.
+	 *
 	 * Buttons have no state, they only respond to click events.
 	 *
 	 * @class
-	 * @name {Aloha.ui.Button}
-	 * @extends {Aloha.ui.Component}
+	 * @name Button
+	 * @extends {Component}
 	 */
 	var Button = Component.extend({
 
 		/**
-		 * The `init()' method is invoked when the component is rendered, not
-		 * when it is created.  This is necessary to allow multiple renderings
-		 * of the same component.  For example, you may want a component to be
-		 * in the toolbar and in the sidebar.
+		 * Initializes this button instance.
+		 * The initialization is done when the component is rendered, not when
+		 * it is created.  This is necessary to allow multiple renderings of
+		 * the same component.  For example, you may want a component to be in
+		 * the toolbar and in the sidebar.
 		 *
 		 * @override
 		 */
@@ -46,13 +55,12 @@ function( jQuery, Component ) {
 		},
 
 		/**
-		 * The `click()' method is invoked whenever the user clicks the
-		 * rendered button.
+		 * Handles mouse clicks on this button's rendered elements.
 		 */
 		click: function() {},
 
 		/**
-		 * Creates the element to be used as the button
+		 * Creates the DOM element to be rendered for user interaction.
 		 *
 		 * @return {jQuery<HTMLElement>}
 		 */

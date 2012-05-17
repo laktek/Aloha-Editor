@@ -13,8 +13,8 @@ function( Aloha, Surface, Component, ToggleButton ) {
 	 * on or off.
 	 *
 	 * @class
-	 * @name Aloha.ui.ToggleCommandButton
-	 * @extends {Aloha.ui.ToggleButton}
+	 * @name ToggleCommandButton
+	 * @extends {ToggleButton}
 	 */
 	var ToggleCommandButton = ToggleButton.extend({
 

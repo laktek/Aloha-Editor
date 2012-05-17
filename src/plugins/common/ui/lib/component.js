@@ -9,8 +9,9 @@ function( Aloha, jQuery, Class ) {
 	/**
 	 * Component class and manager.
 	 *
-	 * The main UI objects are components.  Components can be placed inside any
-	 * container, such as a toolbar or sidebar.
+	 * This implementation constitues the base of all UI components (buttons,
+	 * and labels).  The `Component' constructor object, with its static
+	 * properties and functions, manages all components instances.
 	 *
 	 * @class
 	 * @base
@@ -23,8 +24,6 @@ function( Aloha, jQuery, Class ) {
 		visible: true,
 
 		/**
-		 * Component constructor.
-		 *
 		 * @param {Aloha.Editable} editable The editable to which this
 		 *                                  component will interact with for
 		 *                                  the extent of its lifetime.
@@ -73,8 +72,8 @@ function( Aloha, jQuery, Class ) {
 
 		/**
 		 * Selection change callback.
-		 * Usually overridden by the component or the settings that are passed
-		 * to the constructor at instantialization.
+		 * Usually overridden by the component implementation or the settings
+		 * that are passed to the constructor at instantialization.
 		 */
 		selectionChange: function() {}
 
@@ -85,17 +84,22 @@ function( Aloha, jQuery, Class ) {
 	jQuery.extend( Component, {
 
 		/**
-		 * @type {object.<Aloha.ui.Component>} A List of all defined components.
+		 * @type {object<string, Component>} A hash map of all defined
+		 *                                   components types, mapping the
+		 *                                   names of component type against
+		 *                                   their corresponding constructors.
 		 */
 		components: {},
 
 		/**
-		 * Defines a component.
+		 * Defines a component type.
 		 *
-		 * @param {string} name Component name.
-		 * @param {Aloha.ui.Component} type Component type to inherit from.
-		 * @param {object} settings Settings to configure component type.
-		 * @return {Aloha.ui.Component} Generated component class.
+		 * @param {string} name The unique name of the Component type.
+		 * @param {Component} type An existing Component type to inherit from.
+		 * @param {object} settings Properties and methods which, along with
+		 *                          the inherited properties, will constitues
+		 *                          a new component type.
+		 * @return {Component} A generated Component sub class.
 		 */
 		define: function( name, type, settings ) {
 			Component.components[ name ] = type.extend( settings );
@@ -103,16 +107,20 @@ function( Aloha, jQuery, Class ) {
 		},
 
 		/**
-		 * Renders a defined component for an editable.
+		 * Renders a component of the given type, binding the specified
+		 * editable to it.
 		 *
-		 * @param {string} name Name of component to render.
+		 * It is here that component instances are instantiated.
+		 *
+		 * @param {string} name Name of the component to render.
 		 * @param {Aloha.Editable} editable Editable to associate component with.
-		 * @return {Aloha.ui.Component} This component.
+		 * @return {Component} The component matching the given name.
 		 */
 		render: function( name, editable ) {
 			var ComponentType = Component.components[ name ];
 			return new ComponentType( editable );
 		}
+
 	});
 
 	return Component;
