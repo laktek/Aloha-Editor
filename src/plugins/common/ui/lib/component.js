@@ -118,6 +118,9 @@ function( Aloha, jQuery, Class ) {
 		 */
 		render: function( name, editable ) {
 			var ComponentType = Component.components[ name ];
+			if (!ComponentType) {
+				throw new Error('Component type "' + name + '" is not defined.');
+			}
 			return new ComponentType( editable );
 		}
 
