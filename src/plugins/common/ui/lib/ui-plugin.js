@@ -20,13 +20,13 @@ define([
 	'./abbr',
 	'./characterPicker',
 	'./cite',
-	//'./format',
+	'./format',
 	'./horizontalRule',
 	'./justify',
 	'./languageAnnotation',
 	'./link',
 	'./list',
 	'./metaview',
-	//'./paragraph',
+	'./paragraph',
 	'./pipe'
 ]);
