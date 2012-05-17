@@ -1,18 +1,16 @@
 /**
  * Defines a `Container` Class.
- */
-
-/* 
+ *
  * Containers are activated based on the `showOn` setting for the container.
  * The values are normalized to functions which accept an element and return a
  * boolean; true means the container should be shown.
- * 
+ *
  * For efficiency, we group all containers that have the same normalized
  * `showOn` function together, so we can evaluate it once, regardless of how
  * many containers are using the same logic. In order for this to work, the
  * exact same function must be returned from `Container.normalizeShowOn` when
  * the logic is the same.
- * 
+ *
  * The list of containers is then stored on the editable instance as
  * `editable.container.groups`, which is a hash of `showOn` ids to an array of
  * containers. The `showOn` ids are unique identifiers that are stored as
@@ -26,63 +24,68 @@ define([
 ], function( jQuery, Class ) {
 	'use strict';
 
-	var uid = 1;
+	var uid = 0;
 
 	/**
-	 * Gets the id of a normalized showOn option
-	 * @param {function} showOn
-	 * @return {number}
+	 * Gets the id of a normalized showOn option.  If the given function has
+	 * not had its showOnId set it will receive one, the first time this
+	 * function it is passed to this function.
+	 *
+	 * @param {function} showOn The function whose id we wish to get.
+	 * @return {number} The id of the given function.
 	 */
 	function getShowOnId( showOn ) {
-		// store a unique id on the showOn function
-		// see full explanation at top of file
+		// Store a unique id on the showOn function.
+		// See full explanation at top of file.
 		if ( !showOn.showOnId ) {
-			showOn.showOnId = uid++;
+			showOn.showOnId = ++uid;
 		}
 		return showOn.showOnId;
 	}
 
 	/**
 	 * Show or hide a set of containers.
-	 * @param {Array.<Container>} containers
-	 * @param {boolean} show Whether to show or hide
+	 *
+	 * @param {Array.<Container>} containers The set of containers to operate
+	 *                                       on.
+	 * @param {boolean} show Whether to show or hide the given containers.
 	 */
 	function toggleContainers( containers, show ) {
-		var action = show ? "show" : "hide",
-			j = containers.length;
+		var action = show ? 'show' : 'hide';
+		var i = containers.length;
 
-		while ( j ) {
-			containers[ --j ][ action ]();
+		while ( i ) {
+			containers[ --i ][ action ]();
 		}
-	};
-
-	// ------------------------------------------------------------------------
-	// Instance methods, and properties
-	// ------------------------------------------------------------------------
+	}
 
 	/**
 	 * Container class.
+	 *
 	 * @class
 	 * @base
 	 */
 	var Container = Class.extend({
+
 		/**
 		 * The containing (wrapper) element for this container.
+		 *
 		 * @type {jQuery<HTMLElement>}
 		 */
 		element: null,
 
 		/**
 		 * Initialize a new container with the specified properties.
+		 *
 		 * @param {object=} settings Optional properties, and override methods.
 		 * @constructor
 		 */
 		_constructor: function( settings ) {
-			var group,
-				editable = this.editable = settings.editable,
-				containerSettings = editable.container,
-				showOn = Container.normalizeShowOn( settings.showOn ),
-				key = getShowOnId( showOn );
+			var group;
+			var editable = this.editable = settings.editable;
+			var containerSettings = editable.container;
+			var showOn = Container.normalizeShowOn( settings.showOn );
+			var key = getShowOnId( showOn );
 
 			if ( !containerSettings ) {
 				containerSettings = editable.container = {
@@ -160,7 +163,7 @@ define([
 				elements.push( element );
 			}
 
-			Container.showContainersForContext(editable, elements); 
+			Container.showContainersForContext(editable, elements);
 		},
 
 		/**
@@ -168,7 +171,7 @@ define([
 		 *
 		 * @param {object} editable Active editable
 		 * @param {object} elements An array of elements to show containers for
-		 * @param {string} event_type Type of the event triggered (optional) 
+		 * @param {string} event_type Type of the event triggered (optional)
 		 * @static
 		 */
 		showContainersForContext: function( editable, elements, event_type ) {
