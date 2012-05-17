@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Aloha Editor UI Sandbox</title>
+	<style>
+	.aloha-toolbar {
+		border: 1px solid black;
+	}
+	.aloha-button-on {
+		background-color: green;
+	}
+	</style>
+	<script>
+	var Aloha = {
+		settings: {
+			toolbar: [
+				{
+					label: "Test",
+					showOn: true,
+					components: [ "bold", [ "italic", "underline" ] ]
+				}
+			],
+			locale: "en"
+		}
+	};
+	</script>
+	<script src="../../../../lib/aloha.js" data-aloha-plugins="common/ui,
+	                                                           extra/browser,
+	                                                           extra/wai-lang,
+	                                                           extra/flag-icons"></script>
+	<script>
+		Aloha.ready(function () {
+			Aloha.jQuery( '.aloha' ).aloha();
+	});
+	</script>
+</head>
+<body>
+
+<div class="aloha">
+<p>This is just a <strong>prototype</strong>.</p>
+<p>Trying to make <a href="http://aloha-editor.org">Aloha Editor</a> even more <abbr title="amazing">awesome</abbr>!</p>
+</div>
+
+<div id="references"></div>
+
+</body>
+</html>
