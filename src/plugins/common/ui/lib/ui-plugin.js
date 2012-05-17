@@ -7,26 +7,26 @@
 
 define([
 	// jQuery UI
-	"aloha/jquery-ui",
+	'aloha/jquery-ui',
 
 	// UI core
-	"order!css!./css/ui.css",
-	"./ui",
-	"./surface",
-	"./toolbar",
-	"./sidebar",
+	'order!css!./css/ui.css',
+	'./ui',
+	'./surface',
+	'./toolbar',
+	'./sidebar',
 
 	// components
-	"./abbr",
-	"./characterPicker",
-	"./cite",
-	//"./format",
-	"./horizontalRule",
-	"./justify",
-	"./languageAnnotation",
-	"./link",
-	"./list",
-	"./metaview",
-	//"./paragraph",
-	"./pipe"
+	'./abbr',
+	'./characterPicker',
+	'./cite',
+	//'./format',
+	'./horizontalRule',
+	'./justify',
+	'./languageAnnotation',
+	'./link',
+	'./list',
+	'./metaview',
+	//'./paragraph',
+	'./pipe'
 ]);

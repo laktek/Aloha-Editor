@@ -87,11 +87,12 @@
  */
 
 define([
-	"aloha/core",
-	"aloha/jquery"
-], function( Aloha, jQuery ) {
-	// temporary location helper methods
-	// TODO: these need to live somewhere not tied to the UI
+	'aloha/core',
+	'aloha/jquery'
+],
+function( Aloha, jQuery ) {
+	// Temporary location helper methods.
+	// TODO: These need to live somewhere not tied to the UI.
 	var Ui = {
 		util: {
 			findElemFromRange: function( selector, range ) {
