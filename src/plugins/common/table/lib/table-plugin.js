@@ -30,6 +30,8 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
           Button, ToggleButton, MultiSplit, Tab, Ui ) {
 	'use strict';
 
+	var GENTICS = window.GENTICS;
+
 	/**
 	 * Register the TablePlugin as Aloha.Plugin
 	 */
@@ -796,9 +798,9 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 				// table header
 				if (that.activeTable) {
 						var 
-									selectedColumnIdxs = that.activeTable.selection.selectedColumnIdxs,
-									cell,
-									isHeader = that.activeTable.selection.isHeader();
+							selectedColumnIdxs = that.activeTable.selection.selectedColumnIdxs,
+							cell,
+							isHeader = that.activeTable.selection.isHeader();
 
 						for (var j = 0; j < that.activeTable.selection.selectedCells.length; j++) {
 							cell = that.activeTable.selection.selectedCells[j];
@@ -1468,13 +1470,6 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 		return this.prefix;
 	};
 
-	 TablePlugin.updateFloatingMenuScope = function () {
-  // Note: To be Updated (or removed)
-	// 	if ( null != TablePlugin.activeTable && null != TablePlugin.activeTable.selection.selectionType ) {
-	// 		FloatingMenu.setScope(TablePlugin.name + '.' + TablePlugin.activeTable.selection.selectionType);
-	// 	}
-	 };
-	
 	PluginManager.register(TablePlugin);
 	
 	/**
