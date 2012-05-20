@@ -130,7 +130,7 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 		Aloha.bind( 'aloha-table-selection-changed', function () {
 			if ( null != TablePlugin.activeTable &&
 					0 !== TablePlugin.activeTable.selection.selectedCells.length ) {
-        Aloha.trigger("aloha-special-selection-changed", [ TablePlugin.activeTable.selection.selectedCells, TablePlugin.activeTable.selection.selectionType ]);
+						Aloha.trigger("aloha-special-selection-changed", [ TablePlugin.activeTable.selection.selectedCells, TablePlugin.activeTable.selection.selectionType ]);
 			}
 		});
 
@@ -225,57 +225,57 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 
 	};
 
-  /**
-	 * initializes the table summary component 
-	 */
-  TablePlugin.initTableSummary = function(){
-    var that = this;
-    /**
-     * Table summary component
-     * @class
-     * @extends {Component}
-     */
-     Component.define( "tableSummary", Component, {
-       /**
-        * Initializes the table summary panel
-        * @override
-        */
-        init: function() {
-          this.element = jQuery( "<div>" );
+	/**
+	* initializes the table summary component 
+	*/
+	TablePlugin.initTableSummary = function(){
+		var that = this;
+		/**
+		 * Table summary component
+		 * @class
+		 * @extends {Component}
+		 */
+		 Component.define( "tableSummary", Component, {
+			 /**
+				* Initializes the table summary panel
+				* @override
+				*/
+				init: function() {
+					this.element = jQuery( "<div>" );
 
-          this.summaryLabel = jQuery( "<label>" +  i18n.t('table.label.target') + "</label>" )
-              .appendTo( this.element );
+					this.summaryLabel = jQuery( "<label>" +  i18n.t('table.label.target') + "</label>" )
+							.appendTo( this.element );
 
-          this.summaryField = jQuery( "<textarea></textarea>")
-              .bind( "keyup", function() {
-                if (that.activeTable) {
-                  that.activeTable.obj.attr('summary', jQuery(this).val());
-                  var waiDiv = jQuery('div[class*="wai"]', 'table#' + that.activeTable.obj.attr('id'));
-                  waiDiv.removeClass("aloha-wai-green");
-                  waiDiv.removeClass("aloha-wai-red");
-                    
-                  if (jQuery(this).val().trim() != '') {
-                    waiDiv.addClass("aloha-wai-green");
-                  } else {
-                    waiDiv.addClass("aloha-wai-red");
-                  }
-                }
-              })
-              .appendTo( this.element )
+					this.summaryField = jQuery( "<textarea></textarea>")
+							.bind( "keyup", function() {
+								if (that.activeTable) {
+									that.activeTable.obj.attr('summary', jQuery(this).val());
+									var waiDiv = jQuery('div[class*="wai"]', 'table#' + that.activeTable.obj.attr('id'));
+									waiDiv.removeClass("aloha-wai-green");
+									waiDiv.removeClass("aloha-wai-red");
+										
+									if (jQuery(this).val().trim() != '') {
+										waiDiv.addClass("aloha-wai-green");
+									} else {
+										waiDiv.addClass("aloha-wai-red");
+									}
+								}
+							})
+							.appendTo( this.element )
 
-        },
+				},
 
-        /**
-         * Selection change callback
-         * @override
-         */
-        selectionChange: function(range) {
-          if(that.activeTable){
-            this.summaryField.val(that.activeTable.obj.attr('summary'));
-          } 
-        }
-     });
-  };
+				/**
+				 * Selection change callback
+				 * @override
+				 */
+				selectionChange: function(range) {
+					if(that.activeTable){
+						this.summaryField.val(that.activeTable.obj.attr('summary'));
+					} 
+				}
+		});
+	};
 
 	/**
 	 * test if the table is editable
@@ -378,381 +378,381 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 	/**
 	 * Adds default row buttons, and custom formatting buttons to floating menu
 	 */
-  TablePlugin.initRowsBtns = function () {
-    var that = this;
+	TablePlugin.initRowsBtns = function () {
+		var that = this;
 
-    // add row before btn
-    Component.define( "addrowbefore", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.addrowbefore.label" ),
+		// add row before btn
+		Component.define( "addrowbefore", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.addrowbefore.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-addrowbefore",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-addrowbefore",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
-          that.activeTable.addRowBeforeSelection();
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
+					that.activeTable.addRowBeforeSelection();
 				}
-      }
+			}
 
-    });
+		});
 
-    // add row after btn
-    Component.define( "addrowafter", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.addrowafter.label" ),
+		// add row after btn
+		Component.define( "addrowafter", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.addrowafter.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-addrowafter",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-addrowafter",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
-          that.activeTable.addRowAfterSelection();
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
+					that.activeTable.addRowAfterSelection();
 				}
-      }
-    });
+			}
+		});
 
-    // delete rows btn
-    Component.define( "deleterows", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.deleterows.label" ),
+		// delete rows btn
+		Component.define( "deleterows", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.deleterows.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-deleterows",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-deleterows",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
-          var aTable = that.activeTable;
-          Aloha.showMessage(new Aloha.Message({
-            title : i18n.t('Table'),
-            text : i18n.t('deleterows.confirm'),
-            type : Aloha.Message.Type.CONFIRM,
-            callback : function (sel) {
-              if (sel == 'yes') {
-                aTable.deleteRows();
-              }
-            }
-          }));
-        }
-      }
-    });
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
+					var aTable = that.activeTable;
+					Aloha.showMessage(new Aloha.Message({
+						title : i18n.t('Table'),
+						text : i18n.t('deleterows.confirm'),
+						type : Aloha.Message.Type.CONFIRM,
+						callback : function (sel) {
+							if (sel == 'yes') {
+								aTable.deleteRows();
+							}
+						}
+					}));
+				}
+			}
+		});
 
-    // Format as a row header
-    Component.define( "rowheader", ToggleButton, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.rowheader.label" ),
+		// Format as a row header
+		Component.define( "rowheader", ToggleButton, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.rowheader.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-rowheader",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-rowheader",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        // table header
-			  if (that.activeTable) {
-				  var sc = that.activeTable.selection.selectedCells;
-				  that.rowsToSelect = [];
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				// table header
+				if (that.activeTable) {
+					var sc = that.activeTable.selection.selectedCells;
+					that.rowsToSelect = [];
 
-          var isHeader = that.activeTable.selection.isHeader();
+					var isHeader = that.activeTable.selection.isHeader();
 
-          // if a selection was made, transform the selected cells
-				  for (var i = 0; i < sc.length; i++) {
-					  //            for (var j = 0; j < sc[i].length; j++) {
-					  if (i == 0) {
-						  that.rowsToSelect.push(sc[i].rowIndex);
-					  }
-					  
-					  if ( !isHeader ) {
-            			  sc[i] = Aloha.Markup.transformDomObject(sc[i], 'th').attr('scope', 'col')[0];
-					  } else { 
-            			  sc[i] = Aloha.Markup.transformDomObject(sc[i], 'td').removeAttr('scope')[0];
-					  }
-					  
-					  jQuery(sc[i]).bind('mousedown', function (jqEvent) {
-						  var wrapper = jQuery(this).children('div').eq(0);
-						  setTimeout(function () {
-							  wrapper.trigger('focus');
-						  }, 1);
-						  // unselect cells
-						  if (that.activeTable) {
-							  that.activeTable.selection.unselectCells();
-						  }
-					  });
-					  
-					  /*
+					// if a selection was made, transform the selected cells
+					for (var i = 0; i < sc.length; i++) {
+						//            for (var j = 0; j < sc[i].length; j++) {
+						if (i == 0) {
+							that.rowsToSelect.push(sc[i].rowIndex);
+						}
+						
+						if ( !isHeader ) {
+										sc[i] = Aloha.Markup.transformDomObject(sc[i], 'th').attr('scope', 'col')[0];
+						} else { 
+										sc[i] = Aloha.Markup.transformDomObject(sc[i], 'td').removeAttr('scope')[0];
+						}
+						
+						jQuery(sc[i]).bind('mousedown', function (jqEvent) {
+							var wrapper = jQuery(this).children('div').eq(0);
+							setTimeout(function () {
+								wrapper.trigger('focus');
+							}, 1);
+							// unselect cells
+							if (that.activeTable) {
+								that.activeTable.selection.unselectCells();
+							}
+						});
+						
+						/*
 						Destructive. For debugging.
 						Indicate directionality of header
 						jQuery(sc[i][j]).html('v');
-					  */
-					  //            }
-				  }
-				  
-				  // selection could have changed.
-				  if (that.activeTable) {
-					  that.activeTable.refresh();
-					  that.activeTable.selectRows();
-				  }
-			  }
-		  },
-      
-      /**
-       * Selection change callback
-       * @override
-       */
-      selectionChange: function(range){
-        if(that.activeTable){
-          var sc = that.activeTable.selection.selectedCells;
-          var isHeader = that.activeTable.selection.isHeader();
- 
-          this.setState( isHeader ); 
-        } else {
-          this.setState( false ); 
-        } 
-      }
-    });
-   
-    /**
-     * Row formatting component
-     * @class
-     * @extends {MultiSplit}
-     */
-    var FormatRow = Component.define( "formatRow", MultiSplit, {
-      /**
-       * Gets the buttons for the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getButtons: function() {
-        return jQuery.map( that.rowFormats, function( block ) {
-          return FormatRow._buttons[ block ];
-        });
-      },
+						*/
+						//            }
+					}
+					
+					// selection could have changed.
+					if (that.activeTable) {
+						that.activeTable.refresh();
+						that.activeTable.selectRows();
+					}
+				}
+			},
+			
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function(range){
+				if(that.activeTable){
+					var sc = that.activeTable.selection.selectedCells;
+					var isHeader = that.activeTable.selection.isHeader();
 
-      /**
-       * Gets the items for bottom of the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getItems: function() {
-        return [{
-          label: i18n.t( "button.removeFormatting.label" ),
-          click: function() {
-            if (that.activeTable) {
-              var sc = that.activeTable.selection.selectedCells;
+					this.setState( isHeader ); 
+				} else {
+					this.setState( false ); 
+				} 
+			}
+		});
+	 
+		/**
+		 * Row formatting component
+		 * @class
+		 * @extends {MultiSplit}
+		 */
+		var FormatRow = Component.define( "formatRow", MultiSplit, {
+			/**
+			 * Gets the buttons for the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getButtons: function() {
+				return jQuery.map( that.rowFormats, function( block ) {
+					return FormatRow._buttons[ block ];
+				});
+			},
 
-              // remove formatting of selected columns
-              this.transformRowFormatting(sc, true); 
-              
-              // selection could have changed.
-              that.activeTable.selectRows();
-            }
-          }
-        }];
-      },
+			/**
+			 * Gets the items for bottom of the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getItems: function() {
+				return [{
+					label: i18n.t( "button.removeFormatting.label" ),
+					click: function() {
+						if (that.activeTable) {
+							var sc = that.activeTable.selection.selectedCells;
 
-      /**
-      * Transforms selected cells
-      * @param {Array.<cells>} sc
-      * @param {String} block 
-      */
-      transformRowFormatting: function(sc, block){
-        for (var i = 0; i < sc.length; i++) {
-          // remove all rowformattings
-          for (var f = 0; f < that.rowFormats.length; f++) {
-            jQuery(sc[i]).removeClass("table-style-" + that.rowFormats[f]);
-          }
+							// remove formatting of selected columns
+							this.transformRowFormatting(sc, true); 
+							
+							// selection could have changed.
+							that.activeTable.selectRows();
+						}
+					}
+				}];
+			},
 
-          // set new block 
-          if(block){
-            jQuery(sc[i]).addClass("table-style-" + block);
-          }
-        }
-      }
-    });
+			/**
+			* Transforms selected cells
+			* @param {Array.<cells>} sc
+			* @param {String} block 
+			*/
+			transformRowFormatting: function(sc, block){
+				for (var i = 0; i < sc.length; i++) {
+					// remove all rowformattings
+					for (var f = 0; f < that.rowFormats.length; f++) {
+						jQuery(sc[i]).removeClass("table-style-" + that.rowFormats[f]);
+					}
 
-    /**
-     * Settings for all format row buttons
-     * @type {Array.<Object>}
-     */
-    FormatRow._buttons = {};
-    jQuery.each( that.rowFormats, function( i, block ) {
-      FormatRow._buttons[ block ] = {
-        label: i18n.t( "button." + block + ".label" ),
-        icon: "aloha-large-icon-" + block,
-        click: function() {
-          if (that.activeTable) {
-            var sc = that.activeTable.selection.selectedCells;
+					// set new block 
+					if(block){
+						jQuery(sc[i]).addClass("table-style-" + block);
+					}
+				}
+			}
+		});
 
-            // transform selected columns
-            this.transformRowFormatting(sc, block); 
+		/**
+		 * Settings for all format row buttons
+		 * @type {Array.<Object>}
+		 */
+		FormatRow._buttons = {};
+		jQuery.each( that.rowFormats, function( i, block ) {
+			FormatRow._buttons[ block ] = {
+				label: i18n.t( "button." + block + ".label" ),
+				icon: "aloha-large-icon-" + block,
+				click: function() {
+					if (that.activeTable) {
+						var sc = that.activeTable.selection.selectedCells;
 
-            // selection could have changed.
-            that.activeTable.selectRows();
-          }
-        },
-        isActive: function() {
-          // TODO: Figure out way to detect the active state
-          //return Aloha.queryCommandValue( "formatBlock" ) === block;
-        }
-      };
-    });
-  };
+						// transform selected columns
+						this.transformRowFormatting(sc, block); 
 
-  /**
-   * Adds default column buttons, and custom formatting buttons to floating menu
-   */
-  TablePlugin.initColumnBtns = function () {
-    var that = this;
+						// selection could have changed.
+						that.activeTable.selectRows();
+					}
+				},
+				isActive: function() {
+					// TODO: Figure out way to detect the active state
+					//return Aloha.queryCommandValue( "formatBlock" ) === block;
+				}
+			};
+		});
+	};
 
-    // add column left btn
-    Component.define( "addcolumnleft", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.addcolumnleft.label" ),
+	/**
+	 * Adds default column buttons, and custom formatting buttons to floating menu
+	 */
+	TablePlugin.initColumnBtns = function () {
+		var that = this;
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+		// add column left btn
+		Component.define( "addcolumnleft", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.addcolumnleft.label" ),
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-addcolumnleft",
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-addcolumnleft",
+
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
 					that.activeTable.addColumnsLeft();
 				}
-      }
+			}
 
-    });
+		});
 
-    // add column right btn
-    Component.define( "addcolumnright", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.addcolumnright.label" ),
+		// add column right btn
+		Component.define( "addcolumnright", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.addcolumnright.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-addcolumnright",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-addcolumnright",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
 					that.activeTable.addColumnsRight();
 				}
-      }
-    });
+			}
+		});
 
-    // delete columns btn
-    Component.define( "deletecolumns", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.deletecolumns.label" ),
+		// delete columns btn
+		Component.define( "deletecolumns", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.deletecolumns.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-deletecolumns",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-deletecolumns",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
 					var aTable = that.activeTable;
 					Aloha.showMessage(new Aloha.Message({
 						title : i18n.t('Table'),
@@ -765,234 +765,234 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 						}
 					}));
 				}
-      }
-    });
+			}
+		});
 
-    // Format as a column header
-    Component.define( "columnheader", ToggleButton, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.columnheader.label" ),
+		// Format as a column header
+		Component.define( "columnheader", ToggleButton, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.columnheader.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-columnheader",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-columnheader",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        // table header
-        if (that.activeTable) {
-            var 
-                  selectedColumnIdxs = that.activeTable.selection.selectedColumnIdxs,
-                  cell,
-                  isHeader = that.activeTable.selection.isHeader();
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				// table header
+				if (that.activeTable) {
+						var 
+									selectedColumnIdxs = that.activeTable.selection.selectedColumnIdxs,
+									cell,
+									isHeader = that.activeTable.selection.isHeader();
 
-            for (var j = 0; j < that.activeTable.selection.selectedCells.length; j++) {
-              cell = that.activeTable.selection.selectedCells[j];
-                if ( isHeader ) {
-                  cell = Aloha.Markup.transformDomObject( cell, 'td' ).removeAttr( 'scope' ).get(0);
-                } else { 
-                  cell = Aloha.Markup.transformDomObject( cell, 'th' ).attr( 'scope', 'row' ).get(0);
-                }
-              
-                jQuery( that.activeTable.selection.selectedCells[j] ).bind( 'mousedown', function ( jqEvent ) {
-                    var wrapper = jQuery(this).children('div').eq(0);
-                    // lovely IE ;-)
-                    setTimeout(function () {
-                      wrapper.trigger( 'focus' );
-                    }, 1);
-                    // unselect cells
-                });
-              
-            }
-            // selection the column.
-            that.activeTable.refresh();
-            that.activeTable.selection.unselectCells();
-            that.activeTable.selection.selectColumns( selectedColumnIdxs );
-        }
-      },
+						for (var j = 0; j < that.activeTable.selection.selectedCells.length; j++) {
+							cell = that.activeTable.selection.selectedCells[j];
+								if ( isHeader ) {
+									cell = Aloha.Markup.transformDomObject( cell, 'td' ).removeAttr( 'scope' ).get(0);
+								} else { 
+									cell = Aloha.Markup.transformDomObject( cell, 'th' ).attr( 'scope', 'row' ).get(0);
+								}
+							
+								jQuery( that.activeTable.selection.selectedCells[j] ).bind( 'mousedown', function ( jqEvent ) {
+										var wrapper = jQuery(this).children('div').eq(0);
+										// lovely IE ;-)
+										setTimeout(function () {
+											wrapper.trigger( 'focus' );
+										}, 1);
+										// unselect cells
+								});
+							
+						}
+						// selection the column.
+						that.activeTable.refresh();
+						that.activeTable.selection.unselectCells();
+						that.activeTable.selection.selectColumns( selectedColumnIdxs );
+				}
+			},
 
-      /**
-       * Selection change callback
-       * @override
-       */
-      selectionChange: function(){
-        if(that.activeTable){
-          var isHeader = that.activeTable.selection.isHeader();
-          this.setState( isHeader ); 
-        } else {
-          this.setState( false ); 
-        } 
-      }
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function(){
+				if(that.activeTable){
+					var isHeader = that.activeTable.selection.isHeader();
+					this.setState( isHeader ); 
+				} else {
+					this.setState( false ); 
+				} 
+			}
 
-    });
-    
-    /**
-     * Column formatting component
-     * @class
-     * @extends {MultiSplit}
-     */
-    var FormatColumn = Component.define( "formatColumn", MultiSplit, {
-      /**
-       * Gets the buttons for the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getButtons: function() {
-        return jQuery.map( that.columnFormats, function( block ) {
-          return FormatColumn._buttons[ block ];
-        });
-      },
+		});
+		
+		/**
+		 * Column formatting component
+		 * @class
+		 * @extends {MultiSplit}
+		 */
+		var FormatColumn = Component.define( "formatColumn", MultiSplit, {
+			/**
+			 * Gets the buttons for the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getButtons: function() {
+				return jQuery.map( that.columnFormats, function( block ) {
+					return FormatColumn._buttons[ block ];
+				});
+			},
 
-      /**
-       * Gets the items for bottom of the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getItems: function() {
-        return [{
-          label: i18n.t( "button.removeFormatting.label" ),
-          click: function() {
-            if (that.activeTable) {
-              var sc = that.activeTable.selection.selectedCells;
+			/**
+			 * Gets the items for bottom of the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getItems: function() {
+				return [{
+					label: i18n.t( "button.removeFormatting.label" ),
+					click: function() {
+						if (that.activeTable) {
+							var sc = that.activeTable.selection.selectedCells;
 
-              // remove formatting of selected columns
-              this.transformColumnFormatting(sc, true); 
-              
-              // selection could have changed.
-              that.activeTable.selectColumns();
-            }
-          }
-        }];
-      },
+							// remove formatting of selected columns
+							this.transformColumnFormatting(sc, true); 
+							
+							// selection could have changed.
+							that.activeTable.selectColumns();
+						}
+					}
+				}];
+			},
 
-      /**
-      * Transforms selected cells
-      * @param {Array.<cells>} sc
-      * @param {String} block 
-      */
-      transformColumnFormatting: function(sc, block){
-        for (var i = 0; i < sc.length; i++) {
-          // remove all columnformattings
-          for (var f = 0; f < that.columnFormats.length; f++) {
-            jQuery(sc[i]).removeClass("table-style-" + that.columnFormats[f]);
-          }
+			/**
+			* Transforms selected cells
+			* @param {Array.<cells>} sc
+			* @param {String} block 
+			*/
+			transformColumnFormatting: function(sc, block){
+				for (var i = 0; i < sc.length; i++) {
+					// remove all columnformattings
+					for (var f = 0; f < that.columnFormats.length; f++) {
+						jQuery(sc[i]).removeClass("table-style-" + that.columnFormats[f]);
+					}
 
-          // set new block 
-          if(block){
-            jQuery(sc[i]).addClass("table-style-" + block);
-          }
-        }
-      }
-    });
+					// set new block 
+					if(block){
+						jQuery(sc[i]).addClass("table-style-" + block);
+					}
+				}
+			}
+		});
 
-    /**
-     * Settings for all format column buttons
-     * @type {Array.<Object>}
-     */
-    FormatColumn._buttons = {};
-    jQuery.each( that.columnFormats, function( i, block ) {
-      FormatColumn._buttons[ block ] = {
-        label: i18n.t( "button." + block + ".label" ),
-        icon: "aloha-large-icon-" + block,
-        click: function() {
-          if (that.activeTable) {
-            var sc = that.activeTable.selection.selectedCells;
+		/**
+		 * Settings for all format column buttons
+		 * @type {Array.<Object>}
+		 */
+		FormatColumn._buttons = {};
+		jQuery.each( that.columnFormats, function( i, block ) {
+			FormatColumn._buttons[ block ] = {
+				label: i18n.t( "button." + block + ".label" ),
+				icon: "aloha-large-icon-" + block,
+				click: function() {
+					if (that.activeTable) {
+						var sc = that.activeTable.selection.selectedCells;
 
-            // transform selected columns
-            this.transformColumnFormatting(sc, block); 
+						// transform selected columns
+						this.transformColumnFormatting(sc, block); 
 
-            // selection could have changed.
-            that.activeTable.selectColumns();
-          }
-        },
-        isActive: function() {
-          // TODO: Figure out way to detect the active state
-          //return Aloha.queryCommandValue( "formatBlock" ) === block;
-        }
-      };
-    });
-  };
+						// selection could have changed.
+						that.activeTable.selectColumns();
+					}
+				},
+				isActive: function() {
+					// TODO: Figure out way to detect the active state
+					//return Aloha.queryCommandValue( "formatBlock" ) === block;
+				}
+			};
+		});
+	};
 
-  /**
+	/**
 	 * initialize merge/split cells buttons 
 	 */
 	TablePlugin.initMergeSplitButtons = function () {
-    var that = this;
+		var that = this;
 
-    Component.define( "mergecells", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.mergecells.label" ),
+		Component.define( "mergecells", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.mergecells.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-mergecells",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-mergecells",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
 				if (that.activeTable) {
 					that.activeTable.selection.mergeCells();
 				}
-      }
+			}
 
-    });
+		});
 
-    Component.define( "splitcells", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.splitcells.label" ),
+		Component.define( "splitcells", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.splitcells.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-splitcells",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-splitcells",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
 					that.activeTable.selection.splitCells();
 				}
-      }
+			}
 
-    });
-  }
+		});
+	}
 
 	/**
 	 * initialize the buttons and register them on floating menu
@@ -1000,139 +1000,139 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 	TablePlugin.initTableButtons = function () {
 		var that = this;
 
-    Component.define( "createTable", Button, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.createTable.label" ),
+		Component.define( "createTable", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.createTable.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-createTable",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-createTable",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        TablePlugin.createDialog(this.element);
-      },
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				TablePlugin.createDialog(this.element);
+			},
 
-      /**
-       * Selection change callback
-       * @override
-       */
-      selectionChange: function() {
-      }
-    });
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function() {
+			}
+		});
 
-    // generate formatting buttons for columns
-    this.initColumnBtns();
+		// generate formatting buttons for columns
+		this.initColumnBtns();
 
-    // generate formatting buttons for rows
-    this.initRowsBtns();
+		// generate formatting buttons for rows
+		this.initRowsBtns();
 
-    // generate merge/split buttons 
-    this.initMergeSplitButtons();
+		// generate merge/split buttons 
+		this.initMergeSplitButtons();
 
-    /**
-     * Table formatting component
-     * @class
-     * @extends {MultiSplit}
-     */
-    var FormatTable = Component.define( "formatTable", MultiSplit, {
-      /**
-       * Gets the buttons for the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getButtons: function() {
-        return jQuery.map( that.tableFormats, function( block ) {
-          return FormatTable._buttons[ block ];
-        });
-      },
+		/**
+		 * Table formatting component
+		 * @class
+		 * @extends {MultiSplit}
+		 */
+		var FormatTable = Component.define( "formatTable", MultiSplit, {
+			/**
+			 * Gets the buttons for the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getButtons: function() {
+				return jQuery.map( that.tableFormats, function( block ) {
+					return FormatTable._buttons[ block ];
+				});
+			},
 
-      /**
-       * Gets the items for bottom of the multi split menu
-       * @returns {Array.<Object>}
-       */
-      getItems: function() {
-        return [{
-          label: i18n.t( "button.removeFormatting.label" ),
-          click: function() {
-            // remove all table classes
-            if (that.activeTable) {
-              for (var f = 0; f < that.tableFormats.length; f++) {
-                that.activeTable.obj.removeClass(that.tableFormats[f]);
-              }
-            }
-          }
-        }];
-      },
-    });
+			/**
+			 * Gets the items for bottom of the multi split menu
+			 * @returns {Array.<Object>}
+			 */
+			getItems: function() {
+				return [{
+					label: i18n.t( "button.removeFormatting.label" ),
+					click: function() {
+						// remove all table classes
+						if (that.activeTable) {
+							for (var f = 0; f < that.tableFormats.length; f++) {
+								that.activeTable.obj.removeClass(that.tableFormats[f]);
+							}
+						}
+					}
+				}];
+			},
+		});
 
-    /**
-     * Settings for all format table buttons
-     * @type {Array.<Object>}
-     */
-    FormatTable._buttons = {};
-    jQuery.each( that.tableFormats, function( i, block ) {
-      FormatTable._buttons[ block ] = {
-        label: i18n.t( "button." + block + ".label" ),
-        icon: "aloha-large-icon-" + block,
-        click: function() {
-          // set table css class
-          if (that.activeTable) {
-            for (var f = 0; f < that.tableFormats; f++) {
-              that.activeTable.obj.removeClass(that.tableFormats[f]);
-            }
-            that.activeTable.obj.addClass(block);
-          }
-        },
-        isActive: function() {
-          // TODO: Figure out way to detect the active state
-        }
-      };
-    });
+		/**
+		 * Settings for all format table buttons
+		 * @type {Array.<Object>}
+		 */
+		FormatTable._buttons = {};
+		jQuery.each( that.tableFormats, function( i, block ) {
+			FormatTable._buttons[ block ] = {
+				label: i18n.t( "button." + block + ".label" ),
+				icon: "aloha-large-icon-" + block,
+				click: function() {
+					// set table css class
+					if (that.activeTable) {
+						for (var f = 0; f < that.tableFormats; f++) {
+							that.activeTable.obj.removeClass(that.tableFormats[f]);
+						}
+						that.activeTable.obj.addClass(block);
+					}
+				},
+				isActive: function() {
+					// TODO: Figure out way to detect the active state
+				}
+			};
+		});
 
-    /**
-     * Table Caption component
-     * @class
-     * @override {ToggleButton}
-     */
-    Component.define( "tableCaption", ToggleButton, {
-      /**
-       * Localized label
-       * @type {string}
-       */
-      label: i18n.t( "button.tableCaption.label" ),
+		/**
+		 * Table Caption component
+		 * @class
+		 * @override {ToggleButton}
+		 */
+		Component.define( "tableCaption", ToggleButton, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.tableCaption.label" ),
 
-      /**
-       * Whether or not to show only the icon
-       * @type {boolean}
-       */
-      iconOnly: true,
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
 
-      /**
-       * Which icon to render
-       * @type {string}
-       */
-      icon: "aloha-icon aloha-icon-table-caption",
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-table-caption",
 
-      /**
-       * Click callback
-       * @override
-       */
-      click: function() {
-        if (that.activeTable) {
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				if (that.activeTable) {
 					// look if table object has a child caption
 					if ( that.activeTable.obj.children("caption").is('caption') ) {
 						that.activeTable.obj.children("caption").remove();
@@ -1161,23 +1161,23 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 						}
 					}
 				}
-      },
+			},
 
-      /**
-       * Selection change callback
-       * @override
-       */
-      selectionChange: function() {
-        //var value = Aloha.queryCommandValue( "createLink" );
-        if(that.activeTable){
-          if(that.activeTable.obj.children('caption').length > 0){
-            this.setState( true );
-          }
-        } else {
-          this.setState( false );
-        }
-      }
-    });
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function() {
+				//var value = Aloha.queryCommandValue( "createLink" );
+				if(that.activeTable){
+					if(that.activeTable.obj.children('caption').length > 0){
+						this.setState( true );
+					}
+				} else {
+					this.setState( false );
+				}
+			}
+		});
 
 	};
 
