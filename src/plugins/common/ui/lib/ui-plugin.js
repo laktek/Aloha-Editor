@@ -17,7 +17,6 @@ define([
 	'./sidebar',
 
 	// components
-	'./abbr',
 	'./characterPicker',
 	'./cite',
 	'./horizontalRule',
