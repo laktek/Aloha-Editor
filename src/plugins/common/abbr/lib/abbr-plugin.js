@@ -1,9 +1,9 @@
 /*!
-* Aloha Editor
-* Author & Copyright (c) 2010 Gentics Software GmbH
-* aloha-sales@gentics.com
-* Licensed unter the terms of http://www.aloha-editor.com/license.html
-*/
+ * Aloha Editor
+ * Author & Copyright (c) 2010-2012 Gentics Software GmbH
+ * aloha-sales@gentics.com
+ * Licensed unter the terms of http://www.aloha-editor.com/license.html
+ */
 
 define( [
 	'aloha',
@@ -13,7 +13,7 @@ define( [
 	'i18n!abbr/nls/i18n',
 	'i18n!aloha/nls/i18n'
 ], function ( Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore ) {
-	"use strict";
+	'use strict';
 	
 	var GENTICS = window.GENTICS;
 
@@ -36,8 +36,8 @@ define( [
 		 */
 		init: function () {
 			this.createButtons();
-		    this.subscribeEvents();
-		    this.bindInteractions();
+			this.subscribeEvents();
+			this.bindInteractions();
 		},
 
 		/**
@@ -114,22 +114,22 @@ define( [
 		    for ( var i = 0; i < Aloha.editables.length; i++ ) {
 		        // CTRL+G
 		        Aloha.editables[ i ].obj.keydown( function ( e ) {
-		    		if ( e.metaKey && e.which == 71 ) {
-				        if ( me.findAbbrMarkup() ) {
-				        	FloatingMenu.activateTabOfButton( 'abbrText' );
-				            me.abbrField.focus();
-				        } else {
-				        	me.insertAbbr();
-				        }
-						
-				        // prevent from further handling
-			            // on a MAC Safari cursor would jump to location bar. Use ESC then META+L
-				        e.stopPropagation();
-				        e.preventDefault();
-						
-			            return false;
-		    		}
-		        } );
+							if ( e.metaKey && e.which == 71 ) {
+									if ( me.findAbbrMarkup() ) {
+										FloatingMenu.activateTabOfButton( 'abbrText' );
+										me.abbrField.focus();
+									} else {
+										me.insertAbbr();
+									}
+							
+									// prevent from further handling
+									// on a MAC Safari cursor would jump to location bar. Use ESC then META+L
+									e.stopPropagation();
+									e.preventDefault();
+							
+									return false;
+							}
+						});
 		    }
 		},
 
