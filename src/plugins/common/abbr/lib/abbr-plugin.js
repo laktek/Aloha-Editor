@@ -9,13 +9,34 @@ define( [
 	'aloha',
 	'aloha/jquery',
 	'aloha/plugin',
-	'aloha/floatingmenu',
+	'ui/component',
+	'ui/surface',
+	'ui/toggleButton',
+	'ui/text',
+	'ui/ui',
 	'i18n!abbr/nls/i18n',
 	'i18n!aloha/nls/i18n'
-], function ( Aloha, jQuery, Plugin, FloatingMenu, i18n, i18nCore ) {
+], function ( Aloha, jQuery, Plugin, Component, Surface, ToggleButton, 
+							Text, Ui, i18n, i18nCore ) {
 	'use strict';
-	
-	var GENTICS = window.GENTICS;
+
+	/**
+	 * Local reference to the `Utils.Dom' object.
+	 * @private
+	 */
+	var DomUtils = window.GENTICS.Utils.Dom;
+
+	/**
+	 * Gets the normalize range
+	 * @param {Aloha.Selection} range
+	 * @return {RangeObject}
+	 *
+	 * @private
+	 */
+	function getRange( range ) {
+		return new window.GENTICS.Utils.RangeObject(
+			range || Aloha.getSelection().getRangeAt( 0 ) );
+	};
 
 	/**
 	 * register the plugin with unique name
@@ -27,99 +48,133 @@ define( [
 		languages: [ 'en', 'de' ],
 
 		/**
-		 * default button configuration
+		 * Configure the available languages
 		 */
-		config: [ 'abbr' ],
+		extendToWord: true,
 
 		/**
 		 * Initialize the plugin and set initialize flag on true
 		 */
 		init: function () {
-			this.createButtons();
-			this.subscribeEvents();
-			this.bindInteractions();
+			this._initUIComponents();
+			this._bindInteractions();
 		},
 
 		/**
-		 * Initialize the buttons
+		 * Define the UI components needed by abbr plugin.
+		 *
+		 * @private
 		 */
-		createButtons: function () {
-		    var me = this;
+		_initUIComponents: function(){
+			var plugin = this;
 
-		    // format Abbr Button
-		    // this button behaves like a formatting button like (bold, italics, etc)
-		    this.formatAbbrButton = new Aloha.ui.Button( {
-		    	'name' : 'abbr',
-		        'iconClass' : 'aloha-button aloha-button-abbr',
-		        'size' : 'small',
-		        'onclick' : function () { me.formatAbbr(); },
-		        'tooltip' : i18n.t( 'button.abbr.tooltip' ),
-		        'toggle' : true
-		    } );
-		    FloatingMenu.addButton(
-		        'Aloha.continuoustext',
-		        this.formatAbbrButton,
-		        i18nCore.t( 'floatingmenu.tab.format' ),
-		        1
-		    );
+			/**
+			 * Abbreviation component
+			 * @class
+			 * @extends {ToggleButton}
+			 */
+			Component.define( "abbr", ToggleButton, {
+				/**
+				 * Localized label
+				 * @type {string}
+				 */
+				label: i18n.t( "button.createAbbr.label" ),
 
-		    // insert Abbr
-		    // always inserts a new abbr
-		    this.insertAbbrButton = new Aloha.ui.Button( {
-		    	'name' : 'insertAbbr',
-		    	'iconClass' : 'aloha-button aloha-button-abbr',
-		        'size' : 'small',
-		        'onclick' : function () { me.insertAbbr( false ); },
-		        'tooltip' : i18n.t( 'button.addabbr.tooltip' ),
-		        'toggle' : false
-		    } );
-			FloatingMenu.addButton(
-		        'Aloha.continuoustext',
-		        this.insertAbbrButton,
-		        i18nCore.t( 'floatingmenu.tab.insert' ),
-		        1
-		    );
+				/**
+				 * Whether or not to show only the icon
+				 * @type {boolean}
+				 */
+				iconOnly: true,
 
-		    // add the new scope for abbr
-		    FloatingMenu.createScope( 'abbr', 'Aloha.continuoustext' );
+				/**
+				 * Which icon to render
+				 * @type {string}
+				 */
+				icon: "aloha-icon aloha-icon-abbr",
 
-		    this.abbrField = new Aloha.ui.AttributeField( {
-		    	'width': 320,
-		    	'name': 'abbrText'
-		    } );
-		    // add the input field for abbr
-		    FloatingMenu.addButton(
-		        'abbr',
-		        this.abbrField,
-		        i18n.t( 'floatingmenu.tab.abbr' ),
-		        1
-		    );
+				/**
+				 * Click callback
+				 * @override
+				 */
+				click: function() {
+					var abbr = plugin.findAbbr( Surface.range );
+					if ( abbr ) {
+						plugin.removeAbbr( Surface.range );
+					} else {
+						plugin.createAbbr( "", Surface.range );
+					}
+				},
+
+				/**
+				 * Selection change callback
+				 * @override
+				 */
+				selectionChange: function() {
+					var abbr = plugin.findAbbr();
+					this.setState( !!abbr );
+				}
+			});
+
+			/**
+			 * Edit abbreviation component
+			 * @class
+			 * @extends {Text}
+			 */
+			plugin._abbrField = Component.define( "editAbbr", Text, {
+				/**
+				 * Selection change callback
+				 * @override
+				 */
+				selectionChange: function() {
+					var abbr = plugin.findAbbr();
+					if ( abbr ) {
+						this.show();
+						this.element.val( abbr ? abbr.title : null );
+					} else {
+						this.hide();
+					}
+				},
+
+				/**
+				 * Sets the value of the abbreviation
+				 * @param {string} value
+				 * @override
+				 */
+				setValue: function( value ) {
+					if ( value ) {
+						plugin.findAbbr( Surface.range ).title = value;
+					} else {
+						plugin.removeAbbr( Surface.range );
+					}
+				}
+			});
 		},
 
 		/**
-		 * Parse a all editables for abbreviations
+		 * Parse all editables for abbreviations
 		 * Add the abbr shortcut to all edtiables
+		 *
+		 * @private
 		 */
-		bindInteractions: function () {
-			var me = this;
-			
-		    // on blur check if abbr title is empty. If so remove the a tag
-		    this.abbrField.addListener( 'blur', function ( obj, event ) {
-		        if ( this.getValue() == '' ) {
-		            me.removeAbbr();
-		        }
-		    } );
+		_bindInteractions: function () {
+			var plugin = this;
 
-		    // add to all editables the abbr shortcut
-		    for ( var i = 0; i < Aloha.editables.length; i++ ) {
-		        // CTRL+G
-		        Aloha.editables[ i ].obj.keydown( function ( e ) {
-							if ( e.metaKey && e.which == 71 ) {
-									if ( me.findAbbrMarkup() ) {
-										FloatingMenu.activateTabOfButton( 'abbrText' );
-										me.abbrField.focus();
+			// TODO: This doesn't work
+			// Editables are not available when the 
+			// plugin is initialized.
+			//
+			// add to all editables the abbr shortcut
+			for ( var i = 0; i < Aloha.editables.length; i++ ) {
+				// CTRL+G
+				Aloha.editables[ i ].obj.keydown( function ( e ) {
+					console.log(e.which);
+					if ( e.metaKey && e.which == 71 ) {
+						if ( plugin.findAbbr() ) {
+										// TODO: Figure out how to do this with new UI
+										//FloatingMenu.activateTabOfButton( 'abbrText' );
+										plugin._abbrField.focus();
 									} else {
-										me.insertAbbr();
+										plugin.createAbbr( "" );
 									}
 							
 									// prevent from further handling
@@ -134,140 +189,72 @@ define( [
 		},
 
 		/**
-		 * Subscribe for events
+		 * Finds an abbreviation from a range
+		 * @param {Aloha.Selection} range
+		 * @return {(DOMElement|null)}
 		 */
-		subscribeEvents: function () {
-			var me = this;
-
-		    // add the event handler for selection change
-			Aloha.bind( 'aloha-selection-changed', function ( event, rangeObject ) {
-		        if ( Aloha.activeEditable ) {
-		        	// show/hide the button according to the configuration
-		        	var config = me.getEditableConfig( Aloha.activeEditable.obj );
-
-		        	if ( jQuery.inArray( 'abbr', config ) != -1 ) {
-		        		me.formatAbbrButton.show();
-		        		me.insertAbbrButton.show();
-		        	} else {
-		        		me.formatAbbrButton.hide();
-		        		me.insertAbbrButton.hide();
-			        	// TODO this should not be necessary here!
-			        	// FloatingMenu.doLayout();
-		        		// leave if a is not allowed
-		        		return;
-		        	}
-
-		//        if ( !Aloha.Selection.mayInsertTag('abbr') ) {
-		//        	me.insertAbbrButton.hide();
-		//        }
-
-		        	var foundMarkup = me.findAbbrMarkup( rangeObject );
-		        	if ( foundMarkup ) {
-		        		// abbr found
-		        		me.insertAbbrButton.hide();
-		        		me.formatAbbrButton.setPressed( true );
-		        		FloatingMenu.setScope( 'abbr' );
-		        		me.abbrField.setTargetObject( foundMarkup, 'title' );
-		        	} else {
-		        		// no abbr found
-		        		me.formatAbbrButton.setPressed( false );
-		        		me.abbrField.setTargetObject( null );
-		        	}
-		        	// TODO this should not be necessary here!
-		        	// FloatingMenu.doLayout();
-		        }
-		    });
+		findAbbr: function(range) {
+			return Ui.util.findElemFromRange( "abbr", range );
 		},
 
 		/**
-		 * Check whether inside a abbr tag
-		 * @param {GENTICS.Utils.RangeObject} range range where to insert the object (at start or end)
-		 * @return markup
-		 * @hide
+		 * Creates an abbreviation in a range
+		 * @param {string} title
+		 * @param {Aloha.Selection} range
 		 */
-		findAbbrMarkup: function ( range ) {
-			if ( typeof range == 'undefined' ) {
-		        var range = Aloha.Selection.getRangeObject();
-		    }
-			
-			if ( Aloha.activeEditable ) {
-			    return range.findMarkup( function() {
-			        return this.nodeName.toLowerCase() == 'abbr';
-			    }, Aloha.activeEditable.obj );
-			} else {
-				return null;
+		createAbbr: function(title, range) {
+			var plugin = this;
+			var range = getRange(range);
+
+			// do not insert a abbr in a abbr
+			if ( plugin.findAbbr(range) ) {
+					return;
 			}
+
+			// activate floating menu tab
+			// TODO: Figure out how to do this in new UI
+			// FloatingMenu.activateTabOfButton('abbrText');
+
+			// if selection is collapsed then extend to the word.
+			if ( range.isCollapsed() && plugin.extendToWord != false ) {
+					DomUtils.extendToWord( range );
+			}
+		
+			if ( range.isCollapsed() ) {
+				// insert a abbr with text here
+				var abbrText = i18n.t( 'newabbr.defaulttext' );
+				var newAbbr = jQuery( '<abbr>', { title: title } );
+
+				DomUtils.insertIntoDOM( newAbbr, range, jQuery( Aloha.activeEditable.obj ) );
+				range.startContainer = range.endContainer = newAbbr.contents().get( 0 );
+				range.startOffset = 0;
+				range.endOffset = abbrText.length;
+			} else {
+				DomUtils.addMarkup( range ,
+					jQuery( "<abbr>", { title: title } ), false );
+			}
+
+			//TODO: How to get access to instance of component?
+			//plugin._abbrField.focus();
+		
+			//TODO: trying to select the range after `DomUtils.addMarkup()` 
+			//gives an error.
+			range.select();
+
 		},
 
 		/**
-		 * Format the current selection or if collapsed the current word as abbr.
-		 * If inside a abbr tag the abbr is removed.
+		 * Removes an abbreviation from a range
+		 * @param {Aloha.Selection} range
 		 */
-		formatAbbr: function () {
-			var range = Aloha.Selection.getRangeObject();
+		removeAbbr: function(range) {
+			var plugin = this;
+			var range = getRange(range);
 
-		    if ( Aloha.activeEditable ) {
-		        if ( this.findAbbrMarkup( range ) ) {
-		            this.removeAbbr();
-		        } else {
-		            this.insertAbbr();
-		        }
-		    }
-		},
+			DomUtils.removeFromDOM( plugin.findAbbr( range ), range, true );
 
-		/**
-		 * Insert a new abbr at the current selection. When the selection is collapsed,
-		 * the abbr will have a default abbr text, otherwise the selected text will be
-		 * the abbr text.
-		 */
-		insertAbbr: function ( extendToWord ) {
-		    // current selection or cursor position
-		    var range = Aloha.Selection.getRangeObject();
-
-		    // do not insert a abbr in a abbr
-		    if ( this.findAbbrMarkup( range ) ) {
-		        return;
-		    }
-
-		    // activate floating menu tab
-		    FloatingMenu.activateTabOfButton('abbrText');
-
-		    // if selection is collapsed then extend to the word.
-		    if ( range.isCollapsed() && extendToWord != false ) {
-		        GENTICS.Utils.Dom.extendToWord( range );
-		    }
-			
-		    if ( range.isCollapsed() ) {
-		        // insert a abbr with text here
-		        var abbrText = i18n.t( 'newabbr.defaulttext' );
-		        var newAbbr = jQuery( '<abbr title="">' + abbrText + '</abbr>' );
-		        GENTICS.Utils.Dom.insertIntoDOM( newAbbr, range, jQuery( Aloha.activeEditable.obj ) );
-		        range.startContainer = range.endContainer = newAbbr.contents().get( 0 );
-		        range.startOffset = 0;
-		        range.endOffset = abbrText.length;
-		    } else {
-		        var newAbbr = jQuery( '<abbr title=""></abbr>' );
-		        GENTICS.Utils.Dom.addMarkup( range, newAbbr, false );
-		    }
-			
-		    range.select();
-			
-		    this.abbrField.focus();
-		//	this.abbrChange();
-		},
-
-		/**
-		 * Remove an a tag.
-		 */
-		removeAbbr: function () {
-		    var range = Aloha.Selection.getRangeObject();
-		    var foundMarkup = this.findAbbrMarkup();
-		    if ( foundMarkup ) {
-		        // remove the abbr
-		        GENTICS.Utils.Dom.removeFromDOM( foundMarkup, range, true );
-		        // select the (possibly modified) range
-		        range.select();
-		    }
+			// select the (possibly modified) range
+			range.select();
 		},
 
 		/**
