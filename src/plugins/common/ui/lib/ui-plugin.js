@@ -20,7 +20,6 @@ define([
 	'./abbr',
 	'./characterPicker',
 	'./cite',
-	'./format',
 	'./horizontalRule',
 	'./justify',
 	'./languageAnnotation',
