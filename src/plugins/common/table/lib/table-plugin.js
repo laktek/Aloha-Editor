@@ -1,21 +1,20 @@
 /*!
-* Aloha Editor
-* Author & Copyright (c) 2010 Gentics Software GmbH
-* aloha-sales@gentics.com - way to over-lawyer it up Andrew :/
-* Licensed unter the terms of http://www.aloha-editor.com/license.html
-*/
+ * Aloha Editor
+ * Author & Copyright (c) 2010-2012 Gentics Software GmbH
+ * aloha-sales@gentics.com
+ * Licensed unter the terms of http://www.aloha-editor.com/license.html
+ */
 
 define( [
 	'aloha',
-	'aloha/jquery',
 	'aloha/plugin',
+	'aloha/jquery',
 	'aloha/pluginmanager',
 	'i18n!table/nls/i18n',
 	'i18n!aloha/nls/i18n',
 	'table/table-create-layer',
 	'table/table',
 	'table/table-plugin-utils',
-
   'ui/component',
 	'ui/surface',
 	'ui/autocomplete',
@@ -24,28 +23,13 @@ define( [
 	"ui/multiSplit",
 	"ui/tab",
 	'ui/ui',
-
 	'css!table/css/table.css'
-], function( Aloha,
-	         jQuery,
-	         Plugin,
-	         PluginManager,
-	         i18n,
-	         i18nCore,
-	         CreateLayer,
-	         Table,
-	         Utils,
-           Component,
-           Surface, 
-           Autocomplete,
-           Button,
-           ToggleButton,
-           MultiSplit,
-           Tab,
-           Ui  ) {
+],
+function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
+          CreateLayer, Table, Utils, Component, Surface, Autocomplete,
+          Button, ToggleButton, MultiSplit, Tab, Ui ) {
+	'use strict';
 
-	var GENTICS = window.GENTICS;
-	
 	/**
 	 * Register the TablePlugin as Aloha.Plugin
 	 */
@@ -103,7 +87,6 @@ define( [
 	 * @return void
 	 */
 	TablePlugin.init = function() {
-
     var tableSettings = Aloha.settings.table; //this.settings
 
     this.tableFormats = tableSettings.formats.table || [];
@@ -171,7 +154,7 @@ define( [
 						//reset cell selection flags
 						that.activeTable.selection.cellSelectionMode = false; 
 						that.activeTable.selection.baseCellPosition = null;
-						that.activeTable.selection.lastSelectionRange = null; 
+            that.activeTable.selection.lastSelectionRange = null; 
 						
 						that.activeTable.focusOut();
 					}
