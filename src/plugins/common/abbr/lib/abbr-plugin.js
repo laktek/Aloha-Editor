@@ -17,7 +17,7 @@ define( [
 	'i18n!abbr/nls/i18n',
 	'i18n!aloha/nls/i18n'
 ], function ( Aloha, jQuery, Plugin, Component, Surface, ToggleButton, 
-							Text, Ui, i18n, i18nCore ) {
+              Text, Ui, i18n, i18nCore ) {
 	'use strict';
 
 	/**
@@ -167,25 +167,25 @@ define( [
 			for ( var i = 0; i < Aloha.editables.length; i++ ) {
 				// CTRL+G
 				Aloha.editables[ i ].obj.keydown( function ( e ) {
-					console.log(e.which);
 					if ( e.metaKey && e.which == 71 ) {
 						if ( plugin.findAbbr() ) {
-										// TODO: Figure out how to do this with new UI
-										//FloatingMenu.activateTabOfButton( 'abbrText' );
-										plugin._abbrField.focus();
-									} else {
-										plugin.createAbbr( "" );
-									}
+							// TODO: Figure out how to do this with new UI
+							//FloatingMenu.activateTabOfButton( 'abbrText' );
 							
-									// prevent from further handling
-									// on a MAC Safari cursor would jump to location bar. Use ESC then META+L
-									e.stopPropagation();
-									e.preventDefault();
+							plugin._abbrField.focus();
+						} else {
+							plugin.createAbbr( "" );
+						}
 							
-									return false;
-							}
-						});
-		    }
+						// prevent from further handling
+						// on a MAC Safari cursor would jump to location bar. Use ESC then META+L
+						e.stopPropagation();
+						e.preventDefault();
+							
+						return false;
+					}
+				});
+			}
 		},
 
 		/**
