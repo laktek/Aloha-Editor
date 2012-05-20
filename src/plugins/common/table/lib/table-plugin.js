@@ -5,7 +5,7 @@
  * Licensed unter the terms of http://www.aloha-editor.com/license.html
  */
 
-define( [
+define([
 	'aloha',
 	'aloha/plugin',
 	'aloha/jquery',
@@ -15,7 +15,7 @@ define( [
 	'table/table-create-layer',
 	'table/table',
 	'table/table-plugin-utils',
-  'ui/component',
+	'ui/component',
 	'ui/surface',
 	'ui/autocomplete',
 	'ui/button',
@@ -87,12 +87,12 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 	 * @return void
 	 */
 	TablePlugin.init = function() {
-    var tableSettings = Aloha.settings.table; //this.settings
+		var tableSettings = Aloha.settings.table; //this.settings
 
-    this.tableFormats = tableSettings.formats.table || [];
-    this.rowFormats = tableSettings.formats.row || [];
-    this.columnFormats = tableSettings.formats.column || [];
-    this.summaryinsidebar = tableSettings.summaryinsidebar;
+		this.tableFormats = tableSettings.formats.table || [];
+		this.rowFormats = tableSettings.formats.row || [];
+		this.columnFormats = tableSettings.formats.column || [];
+		this.summaryinsidebar = tableSettings.summaryinsidebar;
 		
 		// add reference to the create layer object
 		this.createLayer = new CreateLayer( this );
@@ -125,7 +125,7 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 		this.initTableButtons();
 
 		// initialize the summary for table 
-    this.initTableSummary();
+		this.initTableSummary();
 
 		Aloha.bind( 'aloha-table-selection-changed', function () {
 			if ( null != TablePlugin.activeTable &&
@@ -148,13 +148,12 @@ function( Aloha, Plugin, jQuery, PluginManager, i18n, i18nCore,
 				if ( that.activeTable ) {
 					// check whether we are inside a table
 					if ( table ) {
-            Aloha.trigger("aloha-special-selection-changed", [ [null], "table" ]);
-						//TablePlugin.updateFloatingMenuScope();
+						Aloha.trigger("aloha-special-selection-changed", [ [null], "table" ]);
 					} else {
 						//reset cell selection flags
 						that.activeTable.selection.cellSelectionMode = false; 
 						that.activeTable.selection.baseCellPosition = null;
-            that.activeTable.selection.lastSelectionRange = null; 
+						that.activeTable.selection.lastSelectionRange = null; 
 						
 						that.activeTable.focusOut();
 					}
