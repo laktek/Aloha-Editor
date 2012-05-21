@@ -5,7 +5,7 @@
  * Licensed unter the terms of http://www.aloha-editor.com/license.html
  */
 
-define( [
+define([
 	'aloha',
 	'aloha/jquery',
 	'aloha/plugin',
@@ -159,14 +159,10 @@ define( [
 		_bindInteractions: function () {
 			var plugin = this;
 
-			// TODO: This doesn't work
-			// Editables are not available when the 
-			// plugin is initialized.
-			//
-			// add to all editables the abbr shortcut
-			for ( var i = 0; i < Aloha.editables.length; i++ ) {
+			// add abbr shortcut when an editable is created
+			Aloha.bind('aloha-editable-created', function(event, editable) {
 				// CTRL+G
-				Aloha.editables[ i ].obj.keydown( function ( e ) {
+				editable.obj.keydown( function ( e ) {
 					if ( e.metaKey && e.which == 71 ) {
 						if ( plugin.findAbbr() ) {
 							// TODO: Figure out how to do this with new UI
@@ -185,7 +181,7 @@ define( [
 						return false;
 					}
 				});
-			}
+			});
 		},
 
 		/**
