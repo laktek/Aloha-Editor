@@ -23,7 +23,6 @@ define([
 	'./justify',
 	'./languageAnnotation',
 	'./link',
-	'./list',
 	'./metaview',
 	'./paragraph',
 	'./pipe'
