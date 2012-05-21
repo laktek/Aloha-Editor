@@ -22,10 +22,172 @@ define([
 	/**
 	 * Determines whether the current selection is inside a list
 	 * @return {boolean}
+	 *
+	 * @private
 	 */
 	function inList() {
 		return Aloha.queryCommandState( "insertorderedlist" ) ||
 			Aloha.queryCommandState( "insertunorderedlist" );
+	}
+
+	/**
+	 * Define the UI components needed by abbr plugin.
+	 *
+	 * @private
+	 */
+	function initUIComponents(){
+		/**
+		 * Ordered list component
+		 * @class
+		 * @extends {ToggleCommandButton}
+		 */
+		Component.define( "orderedList", ToggleCommandButton, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.ol.label" ),
+
+			/**
+			 * Command to execute
+			 * @type {string}
+			 */
+			command: "insertorderedlist",
+
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
+
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-orderedlist"
+		});
+
+		/**
+		 * Unordered list component
+		 * @class
+		 * @extends {ToggleCommandButton}
+		 */
+		Component.define( "unorderedList", ToggleCommandButton, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.ul.label" ),
+
+			/**
+			 * Command to execute
+			 * @type {string}
+			 */
+			command: "insertunorderedlist",
+
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
+
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-unorderedlist"
+		});
+
+		/**
+		 * Indent list component
+		 * @class
+		 * @extends {Button}
+		 */
+		Component.define( "indentList", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.indent.label" ),
+
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
+
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-indent",
+
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				Aloha.execCommand( "indent", null, false, Surface.range );
+			},
+
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function() {
+				if ( inList() ) {
+					this.show();
+				} else {
+					this.hide();
+				}
+			}
+		});
+
+		/**
+		 * Outdent list component
+		 * @class
+		 * @extends {Button}
+		 */
+		Component.define( "outdentList", Button, {
+			/**
+			 * Localized label
+			 * @type {string}
+			 */
+			label: i18n.t( "button.outdent.label" ),
+
+			/**
+			 * Whether or not to show only the icon
+			 * @type {boolean}
+			 */
+			iconOnly: true,
+
+			/**
+			 * Which icon to render
+			 * @type {string}
+			 */
+			icon: "aloha-icon aloha-icon-outdent",
+
+			/**
+			 * Click callback
+			 * @override
+			 */
+			click: function() {
+				Aloha.execCommand( "outdent", null, false, Surface.range );
+			},
+
+			/**
+			 * Selection change callback
+			 * @override
+			 */
+			selectionChange: function() {
+				if ( inList() ) {
+					this.show();
+				} else {
+					this.hide();
+				}
+			}
+		});
+
 	}
 
 	/**
@@ -53,7 +215,7 @@ define([
 		init: function() {
 			var plugin = this;
 
-			plugin._initUIComponents();
+			initUIComponents();
 
 			// add the key handler for Tab
 			Aloha.Markup.addKeyHandler(9, function(event) {
@@ -61,167 +223,7 @@ define([
 			});
 		},
 
-		/**
-		 * Define the UI components needed by abbr plugin.
-		 *
-		 * @private
-		 */
-		_initUIComponents: function(){
-			var plugin = this;
-
-			/**
-			 * Ordered list component
-			 * @class
-			 * @extends {ToggleCommandButton}
-			 */
-			Component.define( "orderedList", ToggleCommandButton, {
-				/**
-				 * Localized label
-				 * @type {string}
-				 */
-				label: i18n.t( "button.ol.label" ),
-
-				/**
-				 * Command to execute
-				 * @type {string}
-				 */
-				command: "insertorderedlist",
-
-				/**
-				 * Whether or not to show only the icon
-				 * @type {boolean}
-				 */
-				iconOnly: true,
-
-				/**
-				 * Which icon to render
-				 * @type {string}
-				 */
-				icon: "aloha-icon aloha-icon-orderedlist"
-			});
-
-			/**
-			 * Unordered list component
-			 * @class
-			 * @extends {ToggleCommandButton}
-			 */
-			Component.define( "unorderedList", ToggleCommandButton, {
-				/**
-				 * Localized label
-				 * @type {string}
-				 */
-				label: i18n.t( "button.ul.label" ),
-
-				/**
-				 * Command to execute
-				 * @type {string}
-				 */
-				command: "insertunorderedlist",
-
-				/**
-				 * Whether or not to show only the icon
-				 * @type {boolean}
-				 */
-				iconOnly: true,
-
-				/**
-				 * Which icon to render
-				 * @type {string}
-				 */
-				icon: "aloha-icon aloha-icon-unorderedlist"
-			});
-
-			/**
-			 * Indent list component
-			 * @class
-			 * @extends {Button}
-			 */
-			Component.define( "indentList", Button, {
-				/**
-				 * Localized label
-				 * @type {string}
-				 */
-				label: i18n.t( "button.indent.label" ),
-
-				/**
-				 * Whether or not to show only the icon
-				 * @type {boolean}
-				 */
-				iconOnly: true,
-
-				/**
-				 * Which icon to render
-				 * @type {string}
-				 */
-				icon: "aloha-icon aloha-icon-indent",
-
-				/**
-				 * Click callback
-				 * @override
-				 */
-				click: function() {
-					Aloha.execCommand( "indent", null, false, Surface.range );
-				},
-
-				/**
-				 * Selection change callback
-				 * @override
-				 */
-				selectionChange: function() {
-					if ( inList() ) {
-						this.show();
-					} else {
-						this.hide();
-					}
-				}
-			});
-
-			/**
-			 * Outdent list component
-			 * @class
-			 * @extends {Button}
-			 */
-			Component.define( "outdentList", Button, {
-				/**
-				 * Localized label
-				 * @type {string}
-				 */
-				label: i18n.t( "button.outdent.label" ),
-
-				/**
-				 * Whether or not to show only the icon
-				 * @type {boolean}
-				 */
-				iconOnly: true,
-
-				/**
-				 * Which icon to render
-				 * @type {string}
-				 */
-				icon: "aloha-icon aloha-icon-outdent",
-
-				/**
-				 * Click callback
-				 * @override
-				 */
-				click: function() {
-					Aloha.execCommand( "outdent", null, false, Surface.range );
-				},
-
-				/**
-				 * Selection change callback
-				 * @override
-				 */
-				selectionChange: function() {
-					if ( inList() ) {
-						this.show();
-					} else {
-						this.hide();
-					}
-				}
-			});
-
-		},	
+			
 
 		/**
 		 * Process Tab and Shift-Tab pressed in lists
@@ -235,7 +237,8 @@ define([
 
 	/**
 	 *
-	 * TODO: Not sure whether this is still needed.
+	 * TODO: These two functions are no longer called from the plugin.
+	 * remove them if unnecessary. 
 	 *
 	 * A key handler that should be run as a keyup handler for the
 	 * backspace and del keys. keyup fires after the browser has already
