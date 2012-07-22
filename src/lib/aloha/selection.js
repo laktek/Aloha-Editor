@@ -1967,6 +1967,7 @@ function correctRange ( range ) {
 		addRange: function( range ) {
 			// set readonly attributes
 			this._nativeSelection.addRange( range );
+
 			// We will correct the range after rangy has processed the native
 			// selection range, so that our correction will be the final fix on
 			// the range according to the guarentee's that Aloha wants to make

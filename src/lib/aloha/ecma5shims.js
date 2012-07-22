@@ -128,6 +128,7 @@ function(){
          return native_method.call(obj, tester, that); 
        }
        else {
+         console.log("custom impl.");
          for (var i= 0, n= obj.length; i<n; i++)
            if (i in obj && tester.call(that, obj[i], i, obj))
                return true;

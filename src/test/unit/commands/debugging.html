@@ -37,13 +37,21 @@
 	<script>
 	var tests = {
 			defaultValue: '',
-			defaultCommand: 'createlink',
+			defaultCommand: 'outdent',
 			defaultAttributes: [ ],
 			tests: [		        
-          {  	start: "[foo]<a href='http://www.google.com/'>bar</a>baz",
-              value: "http://www.google.com/",
-              execResult: "<a href=\"http://www.google.com/\">[foo]bar</a>baz"
+          /*
+          {  	start: "<dl><dt>foo<dd>[bar]</dl>",
+              value: "<p>",
+              execResult: "<dl><dt>foo</dt></dl><p>[bar]</p>"
+          },
+          */
+         
+          {	exclude: ["msie7.0", "msie8.0"],
+            start: '<ol><li>foo<ul><li>bar</li><li>baz[]</li></ul></li></ol>',
+            execResult: '<ol><li>foo<ul><li>bar</li></ul></li><li>baz[]</li></ol>'
           }
+        
 			]
 	}
 	</script>

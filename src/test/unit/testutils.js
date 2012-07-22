@@ -67,7 +67,7 @@ define(	[ '../../lib/aloha/ecma5shims' ], function($_) {
 		 * @param offset offset in the container
 		 * @return the GENTICS.Utils.RangeObject
 		 */
-        setCursor : function(editable, container, offset) {
+     setCursor : function(editable, container, offset) {
 			var range = this.createCollapsedRange(container, offset);
 			editable.focus();
 			range.select();
@@ -242,6 +242,7 @@ define(	[ '../../lib/aloha/ecma5shims' ], function($_) {
 		 * @param {Object: range} Range object
 		 */
 		addRange: function ( editable ) {
+
 			function nextNode(node) {
 				if (node.hasChildNodes()) {
 					return node.firstChild;
@@ -302,8 +303,6 @@ define(	[ '../../lib/aloha/ecma5shims' ], function($_) {
 			// end nodes, with a numeric value indicating the offset.  This format
 			// doesn't allow the parent div to be a start or end node, but in that case
 			// you can always use the curly braces.
-      // Lakshan: changed from querySelector to use jQuery selecotrs since former
-      // doesn't work on IE7
 			if (jQuery(node).find("[data-start]")[0]) {
 				startNode = jQuery( node ).find("[data-start]")[0];
 				startOffset = startNode.getAttribute("data-start");
@@ -382,7 +381,7 @@ define(	[ '../../lib/aloha/ecma5shims' ], function($_) {
 			var range = Aloha.createRange();
 			range.setStart( startNode, startOffset );
 			range.setEnd( endNode, endOffset );
-			
+
 			return range;
 		},
 		
@@ -399,7 +398,7 @@ define(	[ '../../lib/aloha/ecma5shims' ], function($_) {
 						marker = ']'
 					}
 					range.endContainer.insertData(range.endOffset, marker);
-				} else {
+			} else {
 					if (range.collapsed) {
 						marker = '{}'
 					} else {
