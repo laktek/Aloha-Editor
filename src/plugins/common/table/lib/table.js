@@ -41,7 +41,7 @@ define([
 ) {
 	var undefined = void 0;
 	var GENTICS = window.GENTICS;
-	
+
 	/**
 	 * Constructor of the table object
 	 *
@@ -52,13 +52,13 @@ define([
 	var Table = function ( table, tablePlugin ) {
 		// set the table attribut "obj" as a jquery represenation of the dom-table
 		this.obj = jQuery( table );
-		
+
 		correctTableStructure( this );
-		
+
 		if ( !this.obj.attr( 'id' ) ) {
 			this.obj.attr( 'id', GENTICS.Utils.guid() );
 		}
-		
+
 		this.tablePlugin = tablePlugin;
 		this.selection = new TableSelection( this );
 		this.refresh();
@@ -192,7 +192,7 @@ define([
 	Table.prototype.set = function(key, value) {
 		this.tablePlugin.set(key, value);
 	};
-	
+
 	/**
 	 * Given an unbalanced table structure, pad it with the necessary cells to
 	 * make it perfectly rectangular
@@ -201,15 +201,15 @@ define([
 	 */
 	function correctTableStructure ( tableObj ) {
 		var table = tableObj.obj,
-			
+
 			i,
 		    row,
 		    rows = tableObj.getRows(),
 		    rowsNum = rows.length,
-			
+
 			cols,
 			colsNum,
-			
+
 		    colsCount,
 		    maxColsCount = 0,
 		    cachedColsCounts = [],
@@ -221,12 +221,12 @@ define([
 			cols = row.children( 'td, th' );
 			colsNum = cols.length;
 			colsCount = Utils.cellIndexToGridColumn( rows, i, colsNum - 1 ) + 1;
-			
+
 			// Check if the last cell in this row has a col span, to account
 			// for it in the total number of colums in this row
-			
+
 			colSpan = parseInt( cols.last().attr( 'colspan' ), 10 );
-			
+
 			if ( colSpan == 0 ) {
 				// TODO: support colspan=0
 				// http://dev.w3.org/html5/markup/td.html#td.attrs.colspan
@@ -243,14 +243,14 @@ define([
 
 				colsCount += ( colSpan - 1 );
 			}
-			
+
 			cachedColsCounts.push( colsCount );
-			
+
 			if ( colsCount > maxColsCount ) {
 				maxColsCount = colsCount;
 			}
 		}
-		
+
 		for ( i = 0; i < rowsNum; i++ ) {
 			colsCountDiff = maxColsCount - cachedColsCounts[ i ];
 			if ( colsCountDiff > 0 ) {
@@ -261,7 +261,7 @@ define([
 			}
 		}
 	};
-	
+
 	/**
 	 * Transforms the existing dom-table into an editable aloha-table. In fact it
 	 * replaces the td-elements with equivalent TableCell-elements
@@ -279,16 +279,16 @@ define([
 		var that = this,
 		    htmlTableWrapper,
 		    tableWrapper, eventContainer;
-		
+
 		// alter the table attributes
 		this.obj.addClass( this.get( 'className' ) );
 		this.obj.contentEditable( false );
-		
+
 		// set an id to the table if not already set
 		if ( this.obj.attr( 'id' ) == '' ) {
 			this.obj.attr( 'id', GENTICS.Utils.guid() );
 		}
-		
+
 		// unset the selection type
 		this.selection.selectionType = undefined;
 
@@ -310,7 +310,7 @@ define([
 		/*
 		We need to make sure that when the user has selected text inside a
 		table cell we do not delete the entire row, before we activate this
-		
+
 		this.obj.bind( 'keyup', function ( $event ) {
 			if ( $event.keyCode == 46 ) {
 				if ( that.selection.selectedColumnIdxs.length ) {
@@ -325,7 +325,7 @@ define([
 			}
 		} );
 		*/
-		
+
 		// handle click event of the table
 	//	this.obj.bind('click', function(e){
 	//		// stop bubbling the event to the outer divs, a click in the table
@@ -333,8 +333,37 @@ define([
 	//		e.stopPropagation();
 	//		return false;
 	//	});
+	//
+			eventContainer.delegate( 'td', 'mousemove', function( e ) {
 
-		eventContainer.bind( 'mousedown', function ( jqEvent ) {
+				// filter out the control cells
+				if ( jQuery( this ).hasClass( 'aloha-table-selectrow' ) || jQuery( this ).closest( 'tr' ).hasClass( 'aloha-table-selectcolumn' ))
+					return;
+
+				var distanceFromRightBorder = function(cell) {
+					return jQuery( cell ).outerWidth() - ( e.pageX - jQuery( cell ).offset().left );
+				};
+
+				var distanceFromBottomBorder = function(cell) {
+					return jQuery( cell ).outerHeight() - ( e.pageY - jQuery( cell ).offset().top );
+				};
+
+				var colResize = that.tablePlugin.colResize;
+				var rowResize = that.tablePlugin.rowResize;
+
+				if ( colResize && distanceFromRightBorder( this ) < 5 ) {
+					jQuery( this ).css( 'cursor', 'col-resize' );
+					return that.attachColumnResize( this );
+				} else if ( rowResize && distanceFromBottomBorder( this ) < 5 ) {
+					jQuery( this ).css( 'cursor', 'row-resize' );
+					return that.attachRowResize( this );
+				} else {
+					jQuery( this ).css( 'cursor', 'default' );
+					return that.detachRowColResize( this );
+				}
+			});
+
+			eventContainer.bind( 'mousedown', function ( jqEvent ) {
 			// focus the table if not already done
 			if ( !that.hasFocus ) {
 				that.focus();
@@ -382,7 +411,7 @@ define([
 		// Disable resize and selection of the controls (only IE)
 		// Events only can be set to elements which are loaded from the DOM (if they
 		// were created dynamically before) ;)
-		 
+
 		htmlTableWrapper = this.obj.parents( '.' + this.get( 'classTableWrapper' ) );
 		htmlTableWrapper.get( 0 ).onresizestart = function ( e ) { return false; };
 		htmlTableWrapper.get( 0 ).oncontrolselect = function ( e ) { return false; };
@@ -430,7 +459,7 @@ define([
 
 		w.removeClass(this.get('waiGreen'));
 		w.removeClass(this.get('waiRed'));
-		
+
 		// Y U NO explain why we must check that summary is longer than 5 characters?
 		// http://cdn3.knowyourmeme.com/i/000/089/665/original/tumblr_l96b01l36p1qdhmifo1_500.jpg
 
@@ -465,7 +494,7 @@ define([
 			columnToInsert.addClass(this.get('classSelectionColumn'));
 			columnToInsert.css('width', this.get('selectionArea') + 'px');
 			//rowObj.find('td:first').before(columnToInsert);
-			rowObj.prepend(columnToInsert);			
+			rowObj.prepend(columnToInsert);
 			// rowIndex + 1 because an addtional row is still added
 			rowIndex = i + 1;
 
@@ -561,7 +590,7 @@ define([
 
 		// stop bubble, otherwise the mousedown of the table is called ...
 		jqEvent.stopPropagation();
-		
+
 		this.tablePlugin.summary.focus();
 
 		// prevent ff/chrome/safare from selecting the contents of the table
@@ -626,23 +655,23 @@ define([
 		// create an empty td
 		var emptyCell = jQuery('<td>');
 		emptyCell.html('\u00a0');
-		
+
 		// get the number of columns in the table (first row)
 		// iterate through all rows and find the maximum number of columns to add
 		var numColumns = 0;
 		for( var i = 0; i < this.obj.context.rows.length; i++ ){
 			var curNumColumns = 0;
-			
+
 			for( var j = 0; j < this.obj.context.rows[i].cells.length; j++ ){
 				var colspan = Utils.colspan( this.obj.context.rows[i].cells[j] );
 				curNumColumns += colspan;
 			}
-			
+
 			if( numColumns < curNumColumns ) {
 				numColumns = curNumColumns;
 			}
 		}
-		
+
 		var selectionRow = jQuery('<tr>');
 		selectionRow.addClass(this.get('classSelectionRow'));
 		selectionRow.css('height', this.get('selectionArea') + 'px');
@@ -660,7 +689,7 @@ define([
 				var columnToInsert = jQuery('<td>').clone();
 				columnToInsert.addClass(this.get('classLeftUpperCorner'));
 				var clickHandler = function (e) {
-					// select the Table 
+					// select the Table
 					that.focus();
 					that.selection.selectAll();
 
@@ -669,12 +698,12 @@ define([
 					that.tablePlugin.updateFloatingMenuScope();
 
 					// As side-effect of the following call the focus
-					// will be set on the first selected cell. 
+					// will be set on the first selected cell.
 					// This will be overwritten with the summary
 					// attribute-field, if the setting summaryinsidebar
 					// is false.
 					that._removeCursorSelection();
-					
+
 					//If the summary should be modified in the sidebar
 					//we activate the sidebar panel
 					if (that.tablePlugin.settings.summaryinsidebar) {
@@ -702,14 +731,14 @@ define([
 				this.wai = jQuery('<div/>').width(25).height(12).click(clickHandler);
 				columnToInsert.append(this.wai);
 			}
-			
+
 			// add the cell to the row
 			selectionRow.append(columnToInsert);
 		}
-		
+
 		// global mouseup event to reset the selection properties
 		jQuery(document).bind('mouseup', function(e) { that.columnSelectionMouseUp(e) } );
-		
+
 		this.obj.find('tr:first').before( selectionRow );
 	};
 
@@ -733,7 +762,7 @@ define([
 		cell.bind( 'mousedown',  function ( e ) { that.columnSelectionMouseDown( e ) } );
 		cell.bind( 'mouseover',  function ( e ) { that.columnSelectionMouseOver( e ) } );
 	};
-	
+
 	/**
 	 * Handles the mouse-down event for the selection-cells on the top of the
 	 * menu
@@ -749,11 +778,11 @@ define([
 		if ( this.selection.selectedCells.length == 0 ) {
 			this.columnsToSelect = [];
 		}
-		
+
 		// set the origin-columnId of the mouse-click
 		this.clickedColumnId = jQuery( jqEvent.currentTarget.parentNode )
 									.children().index( jqEvent.currentTarget );
-		
+
 		// set single column selection
 		if ( jqEvent.metaKey ) {
 			var arrayIndex = jQuery.inArray( this.clickedColumnId, this.columnsToSelect );
@@ -792,7 +821,7 @@ define([
 		// prevent ff/chrome/safare from selecting the contents of the table
 		return false;
 	};
-	
+
 	/**
 	 * Mouseover-event for the column-selection cell. This method calcluates the
 	 * span between the clicked column and the mouse-overed cell and selects the
@@ -804,13 +833,13 @@ define([
 	 */
 	Table.prototype.columnSelectionMouseOver = function (jqEvent) {
 
-		var 
+		var
 			colIdx = jqEvent.currentTarget.cellIndex,
 			columnsToSelect = [],
 			start,
 			end;
-		
-		// select all columns from the last clicked to the hoverd 
+
+		// select all columns from the last clicked to the hoverd
 		if ( this.mouseDownColIdx ) {
 			start = (colIdx < this.mouseDownColIdx) ? colIdx : this.mouseDownColIdx;
 			end = (colIdx < this.mouseDownColIdx) ? this.mouseDownColIdx : colIdx;
@@ -820,9 +849,9 @@ define([
 			this.selectColumns( columnsToSelect );
 		}
 	};
-	
+
 	/**
-	 * MouseUp-event for the column-selection. This method resets the 
+	 * MouseUp-event for the column-selection. This method resets the
 	 * selection mode
 	 *
 	 * @param jqEvent
@@ -841,7 +870,7 @@ define([
 	 * @return void
 	 */
 	Table.prototype.deleteRows = function() {
-		var 
+		var
 			rowIDs = [],
 			rowsToDelete = {},
 			table = this;
@@ -858,7 +887,7 @@ define([
 	    for (rowId in rowsToDelete) {
 	       rowIDs.push(rowId);
 	    }
-	    
+
 		// if all rows should be deleted, set a flag to remove the WHOLE table
 		var deleteTable = false;
 		if (rowIDs.length == this.numRows) {
@@ -936,7 +965,7 @@ define([
 	 * @return void
 	 */
 	Table.prototype.deleteColumns = function() {
-		var 
+		var
 			colIDs = [],
 			cellToDelete = [],
 			// get all rows to iterate
@@ -945,14 +974,14 @@ define([
 			changeColspan = [],
 			cells,
 			cellInfo;
-		
+
 		var grid = Utils.makeGrid(rows);
 		var selectColWidth = 1; //width of the select-row column
 
 		// if all columns should be deleted, remove the WHOLE table
 		// delete the whole table
 		if ( this.selection.selectedColumnIdxs.length == grid[0].length - selectColWidth ) {
-			
+
 			Dialog.confirm({
 				title : i18n.t('Table'),
 				text : i18n.t('deletetable.confirm'),
@@ -960,9 +989,9 @@ define([
 					that.deleteTable();
 				}
 			});
-			
+
 		} else {
-			
+
 			colIDs.sort(function(a,b) {return a - b;} );
 
 			//TODO there is a bug that that occurs if a column is
@@ -1057,7 +1086,7 @@ define([
 	function rowIndexFromSelection( position, selection ) {
 
 		var newRowIndex = -1;
-		
+
 		// get the index where the new rows should be inserted
 		var cellOfInterest = null;
 		if ( 'before' === position ) {
@@ -1066,7 +1095,7 @@ define([
 			var offset = selection.selectedCells.length - 1;
 			cellOfInterest = selection.selectedCells[ offset ];
 		}
-		
+
 		if (cellOfInterest && cellOfInterest.nodeType == 1) {
 			newRowIndex = cellOfInterest.parentNode.rowIndex;
 		}
@@ -1147,7 +1176,7 @@ define([
 				$rows.eq( newRowIndex ).before( insertionRow );
 			}
 		}
-		
+
 		this.numRows += rowsToInsert;
 	};
 
@@ -1184,7 +1213,7 @@ define([
 	 * @return void
 	 */
 	Table.prototype.addColumns = function( position ) {
-		var 
+		var
 			that = this,
 			emptyCell = jQuery( '<td>' ),
 		    rows = this.getRows(),
@@ -1192,13 +1221,13 @@ define([
 			currentColIdx,
 			columnsToSelect = [],
 			selectedColumnIdxs = this.selection.selectedColumnIdxs;
-		
+
 		if ( 0 === selectedColumnIdxs.length ) {
 			return;
 		}
-		
+
 		selectedColumnIdxs.sort( function ( a, b ) { return a - b; } );
-		
+
 		// refuse to insert a column unless a consecutive range has been selected
 		if ( ! Utils.isConsecutive( selectedColumnIdxs ) ) {
 			Dialog.alert( {
@@ -1207,7 +1236,7 @@ define([
 			});
 			return;
 		}
-		
+
 		if ( 'left' === position ) {
 			currentColIdx = selectedColumnIdxs[ 0 ];
 			// inserting a row before the selected column indicies moves
@@ -1218,9 +1247,9 @@ define([
 		} else {//"right" == position
 			currentColIdx = selectedColumnIdxs[ selectedColumnIdxs.length - 1 ];
 		}
-		
+
 		var grid = Utils.makeGrid( rows );
-		
+
 		for ( var i = 0; i < rows.length; i++ ) {
 			// prepare the cell to be inserted
 			cell = emptyCell.clone();
@@ -1339,7 +1368,7 @@ define([
 		if ( 0 !== jQuery( range.startContainer ).closest('table').length ) {
 			return;
 		}
-		
+
 		// if no cells are selected, do nothing
 		if ( 0 === this.selection.selectedCells.length ) {
 			return;
@@ -1357,7 +1386,7 @@ define([
 	 */
 	Table.prototype.selectColumns = function ( columns ) {
 		var columnsToSelect;
-		
+
 		if ( columns ) {
 			columnsToSelect = columns;
 		} else {
@@ -1369,13 +1398,13 @@ define([
 		for ( var i = 0; i < this.tablePlugin.columnMSItems.length; i++ ) {
 			this.tablePlugin.columnMSButton.showItem(this.tablePlugin.columnMSItems[i].name);
 		}
-		
+
 		Scopes.setScope(this.tablePlugin.name + '.column');
-		
+
 		this.tablePlugin._columnheaderButton.setState(this.selection.isHeader());
-		
+
 		var rows = this.getRows();
-		
+
 		// set the first class found as active item in the multisplit button
 		this.tablePlugin.columnMSButton.setActiveItem();
 		for (var k = 0; k < this.tablePlugin.columnConfig.length; k++) {
@@ -1402,7 +1431,7 @@ define([
 	 * @return void
 	 */
 	Table.prototype.selectRows = function () {
-		
+
 		// activate all row formatting button
 		for (var i = 0; i < this.tablePlugin.rowMSItems.length; i++ ) {
 			this.tablePlugin.rowMSButton.showItem(this.tablePlugin.rowMSItems[i].name);
@@ -1424,10 +1453,10 @@ define([
 				}
 			}
 		}
-		
+
 		//    TableSelection.selectionType = 'row';
 		Scopes.setScope(this.tablePlugin.name + '.row');
-		
+
 		this.selection.selectRows( this.rowsToSelect );
 		this.tablePlugin._rowheaderButton.setState(this.selection.isHeader());
 
@@ -1490,6 +1519,109 @@ define([
 
 		// better unset ;-) otherwise activate() may think you're activated.
 		this.isActive = false;
+	};
+
+	/**
+	 * Attach the event for column resize for the given cell.
+	 * @param {DOMElement} tableCell
+	 *
+	 * @return void
+	 */
+	Table.prototype.attachColumnResize = function(cell) {
+
+		var that = this;
+
+		var liveResize = that.tablePlugin.liveResize;
+
+		//unbind any exisiting resize event handlers
+		that.detachRowColResize( cell );
+
+		var resizeColumn = function(e) {
+			var width = ( e.pageX - jQuery( cell ).offset().left );
+
+			// apply the width to all cells in the column
+			var columnId = jQuery( cell ).closest( 'tr' ).children().index( cell );
+			var rows = jQuery( cell ).closest( 'table' ).find( 'tr' );
+
+			for ( var i = 0; i < rows.length; i++ ) {
+				jQuery( jQuery( rows[i] ).children()[ columnId ] ).css( 'width', width );
+			}
+		};
+
+		jQuery( cell ).bind( 'mousedown.resize', function(){
+
+			if ( liveResize ) {
+				jQuery( 'body' ).bind( 'mousemove.dnd_col_resize', function(e) {
+					resizeColumn( e );
+				});
+			}
+
+			jQuery( 'body' ).bind( 'mouseup.dnd_col_resize', function(e) {
+				if ( liveResize ) {
+					jQuery( 'body' ).unbind( 'mousemove.dnd_col_resize' );
+				} else {
+					resizeColumn( e );
+				}
+
+				jQuery( 'body' ).unbind( 'mouseup.dnd_col_resize' );
+			});
+
+		});
+	};
+
+	/**
+	 * Attach the event handler for row resize for the given cell.
+	 * @param {DOMElement} tableCell
+	 *
+	 * @return void
+	 */
+	Table.prototype.attachRowResize = function(cell) {
+
+		var that = this;
+
+		var liveResize = that.tablePlugin.liveResize;
+
+		//unbind any exisiting resize event handlers
+		that.detachRowColResize( cell );
+
+		var resizeRow = function(e) {
+			var height = ( e.pageY - jQuery( cell ).offset().top );
+
+			// apply the height to all cells in the row
+			var row = jQuery( cell ).closest( "tr" );
+			row.find( "td" ).css( 'height', height );
+		};
+
+		jQuery( cell ).bind( 'mousedown.resize', function(){
+
+			if ( liveResize ) {
+				jQuery( 'body' ).bind( 'mousemove.dnd_row_resize', function(e) {
+					resizeRow( e );
+				});
+			}
+
+			jQuery( 'body' ).bind( 'mouseup.dnd_row_resize', function(e) {
+
+				if ( liveResize ) {
+					jQuery( 'body' ).unbind( 'mousemove.dnd_row_resize' );
+				} else {
+					resizeRow( e );
+				}
+
+				jQuery( 'body' ).unbind( 'mouseup.dnd_row_resize' );
+			});
+
+		});
+	};
+
+	/**
+	 * Detach any column/row resize event handlers attached to the cell.
+	 * @param {DOMElement} tableCell
+	 *
+	 * @return void
+	 */
+	Table.prototype.detachRowColResize = function(cell) {
+		return jQuery(cell).unbind('mousedown.resize');
 	};
 
 	/**
