@@ -382,9 +382,9 @@ function ($) {
 			var rows = cell.closest( 'tbody' ).children( 'tr' );
 			var cellRow = cell.closest( 'tr' );
 			var gridId = Utils.cellIndexToGridColumn( rows,
-																							 rows.index( cellRow ),
-																							 cellRow.children().index( cell )
-																						 );
+																							  rows.index( cellRow ),
+																							  cellRow.children().index( cell )
+																						  );
 
 			var largestWord = "";
 
